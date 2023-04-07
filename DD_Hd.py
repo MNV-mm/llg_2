@@ -2,7 +2,7 @@ import bempp.api
 import numpy as np
 import sympy as sp
 import math
-import gmsh
+#import gmsh
 import os
 import meshio
 import gc
