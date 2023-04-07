@@ -9,8 +9,8 @@ import DD_Hd
 import funcs_2
 #import dolfin as dp
 
-Lx = 800 # 60 150 80
-Ly = 400 # 30 80 40
+Lx = 200 # 60 150 80
+Ly = 100 # 30 80 40
 
 route_0 = '/home/mnv/llg_nl/'
 
