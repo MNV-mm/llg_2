@@ -8,7 +8,7 @@ Created on Sat Apr  9 20:10:13 2022
 import fenics as fen
 import sympy as sp
 import numpy as np
-from scipy.optimize import dual_annaeling, shgo
+from scipy.optimize import dual_annealing, shgo
 def n_pair(Ly1,l1,Z1,Z01,n):
     y, z = sp.symbols('x[1] z')
     ly, z1 = sp.symbols('ly z1')
