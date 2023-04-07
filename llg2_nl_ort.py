@@ -3,7 +3,7 @@
 
 from fenics import *
 import DD_Hd
-#import funcs_2
+import funcs_2
 import numpy as np
 import math
 import sympy as sp
