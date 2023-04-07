@@ -282,8 +282,8 @@ print(ph_0)
 
 
 # Create mesh and define function space
-Lx = 200 # 60 150 80
-Ly = 100 # 30 80 40
+Lx = 570 # 60 150 80
+Ly = 200 # 30 80 40
 #DD_Hd.pe_EF(5,30,1,Lx,Ly,'/home/mnv/Documents/python_doc/llg_nl/E_series')
 
 #FS_1, FS_3, FS_3_1, FS, e_v = DD_Hd.pe_EF(5,30,1,Lx,Ly)
