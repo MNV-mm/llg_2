@@ -310,7 +310,7 @@ SL_mesh = RectangleMesh(Point(-Lx/2,-Ly/2),Point(Lx/2,Ly/2),int(2*Lx),int(2*Ly))
 z_max = 0.5
 p1 = Point(-Lx/2,-Ly/2,-z_max)
 p2 = Point(Lx/2,Ly/2,z_max)
-nx = 300
+nx = 570
 ny = 200
 mesh_3d = BoxMesh(p1,p2,nx,ny,2)
 
