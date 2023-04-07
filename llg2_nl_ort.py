@@ -495,10 +495,15 @@ h = 0.001 #cm
 l = math.sqrt(4*math.sqrt(AA*kkp)/(M_s**2)*h)/dd
 Z = h/dd/2
 
-idx, space_top, slp_pot, trace_space, trace_matrix = DD_Hd.s_chg_prep(SL_space, FS_1, FS_3_1, FS_3_1, FS, Z)
-hd_s = DD_Hd.s_chg(m3, SL_space, FS_1, FS_3_1, FS_3_1, FS, idx, space_top, slp_pot, trace_space, trace_matrix)
+try:
+    idx, space_top, slp_pot, trace_space, trace_matrix = DD_Hd.s_chg_prep(SL_space, FS_1, FS_3_1, FS_3_1, FS, Z)
+    hd_s = DD_Hd.s_chg(m3, SL_space, FS_1, FS_3_1, FS_3_1, FS, idx, space_top, slp_pot, trace_space, trace_matrix)
+except BaseException:
+    print('499-500')
 # vtkfile_hd_s = File('/media/mnv/A2E41E9EE41E74AF/graphs/hd_s.pvd')
 # vtkfile_hd_s << hd_s
+
+print('499-500')
 
 #hd_ext_expr = funcs_2.n_pair(Ly, l, Z, 0, 4)
 #hd_ext = project(hd_ext_expr, FS)
