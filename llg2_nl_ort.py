@@ -500,10 +500,10 @@ hd_s = DD_Hd.s_chg(m3, SL_space, FS_1, FS_3_1, FS_3_1, FS, idx, space_top, slp_p
 # vtkfile_hd_s = File('/media/mnv/A2E41E9EE41E74AF/graphs/hd_s.pvd')
 # vtkfile_hd_s << hd_s
 
-hd_ext_expr = funcs_2.n_pair(Ly, l, Z, 0, 4)
-hd_ext = project(hd_ext_expr, FS)
-vtkfile_Hd_ext = File(route_0 + 'results/graphs/Hd_ext.pvd')
-vtkfile_Hd_ext << hd_ext
+#hd_ext_expr = funcs_2.n_pair(Ly, l, Z, 0, 4)
+#hd_ext = project(hd_ext_expr, FS)
+#vtkfile_Hd_ext = File(route_0 + 'results/graphs/Hd_ext.pvd')
+#vtkfile_Hd_ext << hd_ext
 H_st = project(Expression(('0', '0', '-10/20*x[1]'), degree = 4),FS)
 # vtkfile_hd_ext = File('/media/mnv/A2E41E9EE41E74AF/graphs/hd.pvd')
 # vtkfile_hd_ext << hd_ext
@@ -653,7 +653,7 @@ while j <= 10:
     data_w_me = str(w_me)
     data_tot = str(w_tot)
     data = str(round(T,5)) + ', ' + data_ex + ', ' + data_a + ', ' + data_w_a_u + ', ' + data_w_a_p + ', ' + data_w_a_c + ', '  + data_hd_1 + ', ' + data_hd_2 + ', ' + data_w_me + ', ' + data_tot + ', ' + str(E) + '\n'
-    if i%5 == 0:
+    if i%10 == 0:
         vtkfile_m << (m, T)
         vtkfile_hd_v << (phi, T)
         #vtkfile_hd_s << hd_s
