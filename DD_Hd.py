@@ -380,8 +380,8 @@ def pe_EF(a,b,c,Lx,Ly,angle,file_str):
     z_max = 0.5
     p1 = Point(-Lx/2,-Ly/2,-z_max) #matrix : cos(a)  sin(a)
     p2 = Point(Lx/2,Ly/2,z_max)    #         -sin(a) cos(a)
-    nx = 2850 #570
-    ny = 1000 #200
+    nx = 1710 #570
+    ny = 1500 #200
     mesh = BoxMesh(p1,p2,nx,ny,3)
     #coord_T = np.transpose(mesh.coordinates())
     
