@@ -702,7 +702,7 @@ while j <= 10:
     
 
 
-plot(v3)
+#plot(v3)
 vtkfile_m << (m, T)
 vtkfile_hd_v << (phi, T)
 #vtkfile_hd_s << hd_s
