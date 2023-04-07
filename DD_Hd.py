@@ -351,7 +351,7 @@ def SL_pot_s(u):
 
 def pe_EF(a,b,c,Lx,Ly,angle,file_str):
     ## BEM part
-    grid = bempp.api.shapes.cuboid(length=(2*a, 2*b, 2*c), origin=(-a, -b, c+0.5+a), h=2.2)
+    grid = bempp.api.shapes.cuboid(length=(2*a, 2*b, 2*c), origin=(-a, -b, c+0.5+a), h=2.5)
     coord = grid.vertices
     angle = math.pi/180*angle
     mat = np.array([[math.cos(angle), math.sin(angle), 0],
