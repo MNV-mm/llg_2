@@ -8,7 +8,7 @@ Created on Sat Apr  9 20:10:13 2022
 import fenics as fen
 import sympy as sp
 import numpy as np
-import scipy.optimize as opt
+from scipy.optimize import dual_annaeling, shgo
 def n_pair(Ly1,l1,Z1,Z01,n):
     y, z = sp.symbols('x[1] z')
     ly, z1 = sp.symbols('ly z1')
@@ -119,7 +119,7 @@ def phi_angle(Ku, Kp, Kc, tu, psu, psp, phi_a = 0):
     
     bounds = [(0*np.pi/2+1E-5, np.pi-1E-5), (0*np.pi+1E-5, 2*np.pi/2-1E-5)]
     #from scipy import optimize
-    results = opt.shgo(wm, bounds, args=(Nu, Np, Mat_1, Ku, Kp, Kc))
+    results = shgo(wm, bounds, args=(Nu, Np, Mat_1, Ku, Kp, Kc))
 
     import matplotlib.pyplot as plt
     fig = plt.figure()
@@ -138,7 +138,7 @@ def phi_angle(Ku, Kp, Kc, tu, psu, psp, phi_a = 0):
     
     bounds_p = [(0, 2*np.pi/2)]
     #from scipy import optimize
-    results_p = opt.shgo(wm_p, bounds_p, args=(Nu, Np, Mat_1, Ku, Kp, Kc))
+    results_p = shgo(wm_p, bounds_p, args=(Nu, Np, Mat_1, Ku, Kp, Kc))
 
     fig2 = plt.figure()
     ax = fig2.add_subplot(111)
@@ -161,7 +161,7 @@ def aa_min(Nu, Np, Mat_1, Ku, Kp, Kc):
     
     bounds = [(np.pi/2, np.pi), (0*np.pi, 2*np.pi)]
     #from scipy import optimize
-    results = opt.dual_annealing(wm, bounds, args=(Nu, Np, Mat_1, Ku, Kp, Kc))
+    results = dual_annealing(wm, bounds, args=(Nu, Np, Mat_1, Ku, Kp, Kc))
 
     import matplotlib.pyplot as plt
     fig = plt.figure()
