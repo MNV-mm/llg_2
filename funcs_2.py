@@ -163,14 +163,14 @@ def aa_min(Nu, Np, Mat_1, Ku, Kp, Kc):
     #from scipy import optimize
     results = dual_annealing(wm, bounds, args=(Nu, Np, Mat_1, Ku, Kp, Kc))
 
-    import matplotlib.pyplot as plt
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    cont = ax.contourf(phi, theta, test, levels = 25)
-    ax.plot(results.x[1],results.x[0], marker ='o', color = 'Red')
-    ax.set_xlabel('$\phi$')
-    ax.set_ylabel('$\Theta$')
-    plt.colorbar(cont)
-    plt.show()
+    #import matplotlib.pyplot as plt
+    #fig = plt.figure()
+    #ax = fig.add_subplot(111)
+    #cont = ax.contourf(phi, theta, test, levels = 25)
+    #ax.plot(results.x[1],results.x[0], marker ='o', color = 'Red')
+    #ax.set_xlabel('$\phi$')
+    #ax.set_ylabel('$\Theta$')
+    #plt.colorbar(cont)
+    #plt.show()
     #fig.savefig('s30_min.png', dpi = 300)
     return results
