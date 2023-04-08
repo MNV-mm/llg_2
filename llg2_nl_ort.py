@@ -497,8 +497,8 @@ Z = h/dd/2
 
 print('before_hds')
 
-idx, space_top, slp_pot, trace_space, trace_matrix = DD_Hd.s_chg_prep(SL_space, FS_1, FS_3_1, FS_3_1, FS, Z)
-hd_s = DD_Hd.s_chg(m3, SL_space, FS_1, FS_3_1, FS_3_1, FS, idx, space_top, slp_pot, trace_space, trace_matrix)
+#idx, space_top, slp_pot, trace_space, trace_matrix = DD_Hd.s_chg_prep(SL_space, FS_1, FS_3_1, FS_3_1, FS, Z)
+#hd_s = DD_Hd.s_chg(m3, SL_space, FS_1, FS_3_1, FS_3_1, FS, idx, space_top, slp_pot, trace_space, trace_matrix)
 # vtkfile_hd_s = File('/media/mnv/A2E41E9EE41E74AF/graphs/hd_s.pvd')
 # vtkfile_hd_s << hd_s
 
@@ -559,7 +559,7 @@ vtkfile_m = File(route_0 + 'results/graphs/m.pvd')
 vtkfile_cr = File(route_0 + 'results/graphs/cross.pvd')
 vtkfile_diff = File(route_0 + 'results/graphs/diff.pvd')
 vtkfile_hd_v = File(route_0 + 'results/graphs/hd_v.pvd')
-vtkfile_hd_s = File(route_0 + 'results/graphs/hd_s.pvd')
+#vtkfile_hd_s = File(route_0 + 'results/graphs/hd_s.pvd')
 
 vtkfile_e = File(route_0 + 'results/graphs/e.pvd')
 vtkfile_P = File(route_0 + 'results/graphs/P.pvd')
