@@ -562,7 +562,7 @@ vtkfile_hd_v = File(route_0 + 'results/graphs/hd_v.pvd')
 #vtkfile_hd_s = File(route_0 + 'results/graphs/hd_s.pvd')
 
 vtkfile_e = File(route_0 + 'results/graphs/e.pvd')
-vtkfile_P = File(route_0 + 'results/graphs/P.pvd')
+#vtkfile_P = File(route_0 + 'results/graphs/P.pvd')
 # vtkfile_l = File('graphs/l.pvd')
 #vtkfile_m << m
 vtkfile_e << e_f
@@ -673,8 +673,8 @@ while j <= 10:
     #plot(u3)
     
     v1, v2, v3 = v.split()
-    P = project(m*(m1.dx(0) + m2.dx(1)) - as_vector((m1*m1.dx(0)+m2*m1.dx(1), m1*m2.dx(0)+m2*m2.dx(1), m1*m3.dx(0)+m2*m3.dx(1))), FS_3)
-    vtkfile_P << P
+    #P = project(m*(m1.dx(0) + m2.dx(1)) - as_vector((m1*m1.dx(0)+m2*m1.dx(1), m1*m2.dx(0)+m2*m2.dx(1), m1*m3.dx(0)+m2*m3.dx(1))), FS_3)
+    #vtkfile_P << P
     # error = (m-v)**2*dx
     # E = sqrt(abs(assemble(error)))/(Lx*Ly)/dt
     delta_E = E-E_old
