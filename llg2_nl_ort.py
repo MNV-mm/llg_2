@@ -271,8 +271,10 @@ at = dot(inv(a0),inv(a_rot))
 
 print('before aa_min')
 
-aa_res = DD_Hd.aa_min(NNu, NNp, Mat_1, kku, kkp, kkc)
-th_0, ph_0 = aa_res.x
+#aa_res = DD_Hd.aa_min(NNu, NNp, Mat_1, kku, kkp, kkc)
+#th_0, ph_0 = aa_res.x
+th_0 = 2.013269620451453
+ph_0 = 3.093092175684844
 print(th_0)
 print(ph_0)
 
