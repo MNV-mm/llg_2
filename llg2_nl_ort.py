@@ -269,6 +269,8 @@ from ufl.operators import transpose, inv
 
 at = dot(inv(a0),inv(a_rot))
 
+print('before aa_min')
+
 aa_res = funcs_2.aa_min(NNu, NNp, Mat_1, kku, kkp, kkc)
 th_0, ph_0 = aa_res.x
 print(th_0)
