@@ -55,7 +55,7 @@ def n_pair(Ly1,l1,Z1,Z01,n):
     
     out = fen.Expression(('0',hy_c,hz_c), degree = 3, l = l1, Ly = Ly1, Z = Z1, z = Z01)#, degree = 3, z=Z-1
     return out
-
+'''
 def w(x, y, Nu, Np, Mat_1, Ku, Kp, Kc):
     m = np.array([np.sin(x)*np.cos(y), np.sin(x)*np.sin(y), np.cos(x)])
     #mm = Mat_1.dot(m)
@@ -71,6 +71,7 @@ def wm(x, Nu, Np, Mat_1, Ku, Kp, Kc):
     #f = -Ku*(Nu.dot(m))**2 + Kp*(Np.dot(m))**2 + Kc*(mm[0]**2*mm[1]**2 + mm[0]**2*mm[2]**2 + mm[1]**2*mm[2]**2)
     f = -Ku*(np.matmul(Nu,m))*np.matmul(Nu,m) + Kp*(np.matmul(Np,m))*np.matmul(Np,m) + Kc*(mm[0]**2*mm[1]**2 + mm[0]**2*mm[2]**2 + mm[1]**2*mm[2]**2)
     return f
+'''
 
 def wm_p(x, Nu, Np, Mat_1, Ku, Kp, Kc):
     m = np.array([np.sin(np.pi/2)*np.cos(x[0]), np.sin(np.pi/2)*np.sin(x[0]), 0.])
@@ -149,6 +150,23 @@ def phi_angle(Ku, Kp, Kc, tu, psu, psp, phi_a = 0):
     return results_p
 
 def aa_min(Nu, Np, Mat_1, Ku, Kp, Kc):
+    
+    def w(x, y, Nu, Np, Mat_1, Ku, Kp, Kc):
+    m = np.array([np.sin(x)*np.cos(y), np.sin(x)*np.sin(y), np.cos(x)])
+    #mm = Mat_1.dot(m)
+    mm = np.matmul(Mat_1,m)
+    #f = -Ku*(Nu.dot(m))**2 + Kp*(Np.dot(m))**2 + Kc*(mm[0]**2*mm[1]**2 + mm[0]**2*mm[2]**2 + mm[1]**2*mm[2]**2)
+    f = -Ku*(np.matmul(Nu,m))*np.matmul(Nu,m) + Kp*(np.matmul(Np,m))*np.matmul(Np,m) + Kc*(mm[0]**2*mm[1]**2 + mm[0]**2*mm[2]**2 + mm[1]**2*mm[2]**2)
+    return f
+    
+    def wm(x, Nu, Np, Mat_1, Ku, Kp, Kc):
+    m = np.array([np.sin(x[0])*np.cos(x[1]), np.sin(x[0])*np.sin(x[1]), np.cos(x[0])])
+    #mm = Mat_1.dot(m)
+    mm = np.matmul(Mat_1,m)
+    #f = -Ku*(Nu.dot(m))**2 + Kp*(Np.dot(m))**2 + Kc*(mm[0]**2*mm[1]**2 + mm[0]**2*mm[2]**2 + mm[1]**2*mm[2]**2)
+    f = -Ku*(np.matmul(Nu,m))*np.matmul(Nu,m) + Kp*(np.matmul(Np,m))*np.matmul(Np,m) + Kc*(mm[0]**2*mm[1]**2 + mm[0]**2*mm[2]**2 + mm[1]**2*mm[2]**2)
+    return f
+    
     nx = 100
     ny = 200
     
