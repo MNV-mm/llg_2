@@ -1,4 +1,5 @@
-#import bempp.api
+import bempp.api
+import scipy
 import numpy as np
 import sympy as sp
 import math
@@ -758,3 +759,48 @@ def side_pot(FS_2, FS_3, FS_3_1, FS_2v, z_top, z_max, Lx, Ly, l_i):
     hd_s = project(as_vector((h1,h2,h3)), FS_2v)
     
     return hd_s
+
+def aa_min(Nu, Np, Mat_1, Ku, Kp, Kc):
+    
+    def w(x, y, Nu, Np, Mat_1, Ku, Kp, Kc):
+        m = np.array([np.sin(x)*np.cos(y), np.sin(x)*np.sin(y), np.cos(x)])
+        #mm = Mat_1.dot(m)
+        mm = np.matmul(Mat_1,m)
+        #f = -Ku*(Nu.dot(m))**2 + Kp*(Np.dot(m))**2 + Kc*(mm[0]**2*mm[1]**2 + mm[0]**2*mm[2]**2 + mm[1]**2*mm[2]**2)
+        f = -Ku*(np.matmul(Nu,m))*np.matmul(Nu,m) + Kp*(np.matmul(Np,m))*np.matmul(Np,m) + Kc*(mm[0]**2*mm[1]**2 + mm[0]**2*mm[2]**2 + mm[1]**2*mm[2]**2)
+        return f
+    
+    def wm(x, Nu, Np, Mat_1, Ku, Kp, Kc):
+        m = np.array([np.sin(x[0])*np.cos(x[1]), np.sin(x[0])*np.sin(x[1]), np.cos(x[0])])
+        #mm = Mat_1.dot(m)
+        mm = np.matmul(Mat_1,m)
+        #f = -Ku*(Nu.dot(m))**2 + Kp*(Np.dot(m))**2 + Kc*(mm[0]**2*mm[1]**2 + mm[0]**2*mm[2]**2 + mm[1]**2*mm[2]**2)
+        f = -Ku*(np.matmul(Nu,m))*np.matmul(Nu,m) + Kp*(np.matmul(Np,m))*np.matmul(Np,m) + Kc*(mm[0]**2*mm[1]**2 + mm[0]**2*mm[2]**2 + mm[1]**2*mm[2]**2)
+        return f
+    
+    nx = 100
+    ny = 200
+    
+    theta = np.linspace(0, np.pi, nx)
+    phi = np.linspace(0, 2*np.pi, ny)
+    test = np.zeros((nx,ny))
+    
+    for i in range(0, nx, 1):
+        for j in range(0, ny, 1):
+            test[i,j] = w(theta[i], phi[j], Nu, Np, Mat_1, Ku, Kp, Kc)
+    
+    bounds = [(np.pi/2, np.pi), (0*np.pi, 2*np.pi)]
+    #from scipy import optimize
+    results = scipy.optimize.dual_annealing(wm, bounds, args=(Nu, Np, Mat_1, Ku, Kp, Kc))
+
+    #import matplotlib.pyplot as plt
+    #fig = plt.figure()
+    #ax = fig.add_subplot(111)
+    #cont = ax.contourf(phi, theta, test, levels = 25)
+    #ax.plot(results.x[1],results.x[0], marker ='o', color = 'Red')
+    #ax.set_xlabel('$\phi$')
+    #ax.set_ylabel('$\Theta$')
+    #plt.colorbar(cont)
+    #plt.show()
+    #fig.savefig('s30_min.png', dpi = 300)
+    return results
