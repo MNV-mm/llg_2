@@ -785,12 +785,15 @@ def aa_min(Nu, Np, Mat_1, Ku, Kp, Kc):
     phi = np.linspace(0, 2*np.pi, ny)
     test = np.zeros((nx,ny))
     
+    print('before test')
+    
     for i in range(0, nx, 1):
         for j in range(0, ny, 1):
             test[i,j] = w(theta[i], phi[j], Nu, Np, Mat_1, Ku, Kp, Kc)
     
     bounds = [(np.pi/2, np.pi), (0*np.pi, 2*np.pi)]
     #from scipy import optimize
+    print('before annealing')
     results = scipy.optimize.dual_annealing(wm, bounds, args=(Nu, Np, Mat_1, Ku, Kp, Kc))
 
     #import matplotlib.pyplot as plt
