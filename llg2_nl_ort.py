@@ -167,6 +167,13 @@ def dmdn(m,n):
     v3 = dot(grad(m3),n)
     return as_vector((v1,v2,v3))
 
+def mwrite(filename, out, a_type):
+    MPI.barrier(comm)
+    if rank == 0:
+        file_txt = open(filename,a_type)
+        file_txt.write(title)
+        file_txt.close()
+
 alpha1 = 2 #0.9 #0.1 #0.0001 
 alpha2 = 10   #parameter alpha
 UU0 = 0*0.3*10/3 #Voltage (CGS)
@@ -621,9 +628,10 @@ diffr = Function(FS)
 Hd = Function(FS)
 
 title = 't' + ', '  + 'w_ex' + ', '  + 'w_a' + ', ' + 'w_a_u' + ', ' + 'w_a_p' + ', ' + 'w_a_c' + ', ' + 'w_hd_1' + ', ' + 'w_hd_2'  +  ', ' + 'w_me' + ', '  + 'w_tot' + ', '  + 'diff\n'
-file_txt = open(route_0 + 'results/avg_table.txt','w')
-file_txt.write(title)
-file_txt.close()
+#file_txt = open(route_0 + 'results/avg_table.txt','w')
+#file_txt.write(title)
+#file_txt.close()
+mwrite(route_0 + 'results/avg_table.txt', title, 'w')
 while j <= 10:
     if i>=N_f:
         print(N_f, ' iterations reached')
@@ -651,15 +659,15 @@ while j <= 10:
     error = (m-v)**2*dx
     E = sqrt(abs(assemble(error)))/(Lx*Ly)/dt
     
-    w_ex = assemble((dot(grad(m1),grad(m1)) + dot(grad(m2),grad(m2)) + dot(grad(m3),grad(m3)))*dx)/(Lx*Ly)
+    w_ex = MPI.sum(comm, assemble((dot(grad(m1),grad(m1)) + dot(grad(m2),grad(m2)) + dot(grad(m3),grad(m3)))*dx)/(Lx*Ly))
     m_cryst = dot(at,m)
-    w_a = assemble((-kku*dot(m,Nu)**2 + kkp*dot(m,Np)**2 + kkc*(m_cryst[0]**2*m_cryst[1]**2 + m_cryst[0]**2*m_cryst[2]**2 + m_cryst[1]**2*m_cryst[2]**2))*dx)/(Lx*Ly*kkp)
-    w_a_u = assemble((-kku*dot(m,Nu)**2)*dx)/(Lx*Ly*kkp) #assemble(-m3*m3*dx)/(Lx*Ly)
-    w_a_p = assemble((kkp*dot(m,Np)**2)*dx)/(Lx*Ly*kkp)
-    w_a_c = assemble((kkc*(m_cryst[0]**2*m_cryst[1]**2 + m_cryst[0]**2*m_cryst[2]**2 + m_cryst[1]**2*m_cryst[2]**2))*dx)/(Lx*Ly*kkp)
-    w_hd_1 = assemble(-dot(to_2d(m),-grad(phi))*dx)/(Lx*Ly)*(M_s*M_s/2/kkp)
-    w_hd_2 = assemble(-dot(m,hd_ext+Hd_v_y)*dx)/(Lx*Ly)*M_s/2/kkp
-    w_me = assemble(pp*dot(e_f,m*div(to_2d(m)) - grad(m)*m)*dx)/(Lx*Ly)
+    w_a = MPI.sum(comm, assemble((-kku*dot(m,Nu)**2 + kkp*dot(m,Np)**2 + kkc*(m_cryst[0]**2*m_cryst[1]**2 + m_cryst[0]**2*m_cryst[2]**2 + m_cryst[1]**2*m_cryst[2]**2))*dx)/(Lx*Ly*kkp))
+    w_a_u = MPI.sum(comm, assemble((-kku*dot(m,Nu)**2)*dx)/(Lx*Ly*kkp) #assemble(-m3*m3*dx)/(Lx*Ly))
+    w_a_p = MPI.sum(comm, assemble((kkp*dot(m,Np)**2)*dx)/(Lx*Ly*kkp))
+    w_a_c = MPI.sum(comm, assemble((kkc*(m_cryst[0]**2*m_cryst[1]**2 + m_cryst[0]**2*m_cryst[2]**2 + m_cryst[1]**2*m_cryst[2]**2))*dx)/(Lx*Ly*kkp))
+    w_hd_1 = MPI.sum(comm, assemble(-dot(to_2d(m),-grad(phi))*dx)/(Lx*Ly)*(M_s*M_s/2/kkp))
+    w_hd_2 = MPI.sum(comm, assemble(-dot(m,hd_ext+Hd_v_y)*dx)/(Lx*Ly)*M_s/2/kkp)
+    w_me = MPI.sum(comm, assemble(pp*dot(e_f,m*div(to_2d(m)) - grad(m)*m)*dx)/(Lx*Ly))
     w_tot = w_a + w_ex + w_hd_1 + w_me
     data_ex = str(w_ex)
     data_a = str(w_a)
@@ -671,14 +679,15 @@ while j <= 10:
     data_w_me = str(w_me)
     data_tot = str(w_tot)
     data = str(round(T,5)) + ', ' + data_ex + ', ' + data_a + ', ' + data_w_a_u + ', ' + data_w_a_p + ', ' + data_w_a_c + ', '  + data_hd_1 + ', ' + data_hd_2 + ', ' + data_w_me + ', ' + data_tot + ', ' + str(E) + '\n'
+    #file_txt = open(route_0 + 'results/avg_table.txt','a')
+    #file_txt.write(data)
+    #file_txt.close()
+    mwrite(route_0 + 'results/avg_table.txt', title, 'a')
     if i%10 == 0:
         vtkfile_m << (m, T)
         vtkfile_hd_v << (phi, T)
         #vtkfile_hd_s << hd_s
         vtkfile_diff << (diffr, T)
-        file_txt = open(route_0 + 'results/avg_table.txt','a')
-        file_txt.write(data)
-        file_txt.close()
         #vtkfile_cr << cr
     T = T + dt    
     # vtkfile_m2 << m2
