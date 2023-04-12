@@ -53,6 +53,7 @@ def norm_sol_s(u, FS):
     return u
 
 def max_norm(u):
+    '''
     FS = u.function_space()
     u_array = u.vector().get_local()
     N = int(np.size(u_array))
@@ -66,6 +67,12 @@ def max_norm(u):
         if norm > norm_prev:
             norm_prev = norm
         i += 3
+    '''
+    u1, u2, u3 = u.split()
+    V1 = u1.compute_vertex_values()
+    V2 = u2.compute_vertex_values()
+    V3 = u3.compute_vertex_values()
+    norm_prev = np.max(np.sqrt(V1*V1 + V2*V2 + V3*V3))
     return norm_prev
 
 def h_rest(m,p, e_f, dedz, phi, hd_s, kku, kkp, kkc, nu, np, at):
