@@ -174,6 +174,11 @@ def mwrite(filename, out, a_type):
         file_txt.write(title)
         file_txt.close()
 
+comm = MPI.comm_world
+
+rank = comm.Get_rank()
+size = comm.Get_size()
+
 alpha1 = 2 #0.9 #0.1 #0.0001 
 alpha2 = 10   #parameter alpha
 UU0 = 0*0.3*10/3 #Voltage (CGS)
