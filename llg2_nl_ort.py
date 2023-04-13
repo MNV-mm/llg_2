@@ -450,7 +450,7 @@ I2 = sp.asinh(3/4) + y - sp.asinh((2*sp.exp(y)+sp.exp(4*y))/(1+sp.exp(2*y))/2)
 intg_0 = sp.Matrix([I1, 0, I2])
 
 intg_1 = mat*intg_0
-int_y = sp.ccode(intg_1[1])
+int_y = sp.ccode(intg_1[1]*4*sp.pi)
 
 # In[3]:
 
