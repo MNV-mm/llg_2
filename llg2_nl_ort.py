@@ -688,7 +688,7 @@ while j <= 10:
     #file_txt.write(data)
     #file_txt.close()
     mwrite(route_0 + 'results/avg_table.txt', title, 'a')
-    if i%10 == 0:
+    if i%1 == 0:
         vtkfile_m << (m, T)
         vtkfile_hd_v << (phi, T)
         #vtkfile_hd_s << hd_s
