@@ -52,7 +52,7 @@ def pot(m, wall_type, b, phi_prev, m_b, pbc):
     b = assemble(L)
     BC.apply(A,b)
     
-    solver = KrylovSolver('gmres', 'ilu')
+    solver = KrylovSolver('gmres', 'hypre_euclid') #KrylovSolver('gmres', 'ilu') #hypre_euclid
     solver.parameters["nonzero_initial_guess"] = True
     u = Function(nFS)
     u.vector()[:] = phi_prev.vector()
