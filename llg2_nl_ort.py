@@ -35,7 +35,6 @@ def norm_sol(m, u, FS):
 
 def norm_sol_s(u, FS):
     #vector().array() is replaced by vector().get_local()
-    '''
     u_array = u.vector().get_local()
     N = int(np.size(u_array))
     #v2d = vertex_to_dof_map(FS)
@@ -51,8 +50,6 @@ def norm_sol_s(u, FS):
     
     u_array = u_array_2#[d2v]
     u.vector()[:] = u_array
-    '''
-    u = project(u/sqrt(dot(u,u)), FS)
     return u
 
 def max_norm(u):
