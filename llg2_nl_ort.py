@@ -38,9 +38,9 @@ def norm_sol_s(u, FS):
     '''
     u_array = u.vector().get_local()
     N = int(np.size(u_array))
-    v2d = vertex_to_dof_map(FS)
-    d2v = dof_to_vertex_map(FS)
-    u_array_2 = u_array[v2d]
+    #v2d = vertex_to_dof_map(FS)
+    #d2v = dof_to_vertex_map(FS)
+    u_array_2 = u_array#[v2d]
     i = 0
     while i+2 < N:
         norm = math.sqrt(math.pow(u_array_2[i],2) + math.pow(u_array_2[i+1],2) + math.pow(u_array_2[i+2],2))
@@ -49,7 +49,7 @@ def norm_sol_s(u, FS):
         u_array_2[i+2] /= norm
         i += 3
     
-    u_array = u_array_2[d2v]
+    u_array = u_array_2#[d2v]
     u.vector()[:] = u_array
     '''
     u = project(u/sqrt(dot(u,u)), FS)
