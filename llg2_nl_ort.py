@@ -308,7 +308,7 @@ Ly = 200 # 30 80 40
 
 #FS_1, FS_3, FS_3_1, FS, e_v = DD_Hd.pe_EF(5,30,1,Lx,Ly)
 #mesh = FS.mesh()
-
+mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 1140, 400)
 mesh_0 = Mesh(route_0 + 'MESH.xml')
 
 # Sub domain for Periodic boundary condition
@@ -338,8 +338,6 @@ ny = 200
 
 El = VectorElement('CG', triangle, 1, dim=3)
 FS_0 = FunctionSpace(mesh_0, El, constrained_domain=pbc)
-
-mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 1140, 400)
 
 FS = FunctionSpace(mesh, El, constrained_domain=pbc)
 
