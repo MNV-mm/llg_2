@@ -309,7 +309,7 @@ Ly = 200 # 30 80 40
 #FS_1, FS_3, FS_3_1, FS, e_v = DD_Hd.pe_EF(5,30,1,Lx,Ly)
 #mesh = FS.mesh()
 
-mesh = Mesh(route_0 + 'MESH.xml')
+mesh_0 = Mesh(route_0 + 'MESH.xml')
 
 # Sub domain for Periodic boundary condition
 class PeriodicBoundary(SubDomain):
@@ -332,33 +332,40 @@ p1 = Point(-Lx/2,-Ly/2,-z_max)
 p2 = Point(Lx/2,Ly/2,z_max)
 nx = 570
 ny = 200
-mesh_3d = BoxMesh(p1,p2,nx,ny,2)
+#mesh_3d = BoxMesh(p1,p2,nx,ny,2)
 
 #SL_space, FS_1, FS_3, FS_3_1, FS
 
 El = VectorElement('CG', triangle, 1, dim=3)
+FS_0 = FunctionSpace(mesh_0, El, constrained_domain=pbc)
+
+mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 2850, 1000)
+
 FS = FunctionSpace(mesh, El, constrained_domain=pbc)
 
-El_1 = FiniteElement('CG', triangle, 1)
-FS_1 = FunctionSpace(mesh, El_1)
+#El_1 = FiniteElement('CG', triangle, 1)
+#FS_1 = FunctionSpace(mesh, El_1)
 
-SL_El = FiniteElement('CG', triangle, 1)
-SL_space = FunctionSpace(SL_mesh, SL_El)
+#SL_El = FiniteElement('CG', triangle, 1)
+#SL_space = FunctionSpace(SL_mesh, SL_El)
 
-El_3 = FiniteElement('CG', tetrahedron, 2)
-FS_3 = FunctionSpace(mesh_3d, El_3)
+#El_3 = FiniteElement('CG', tetrahedron, 2)
+#FS_3 = FunctionSpace(mesh_3d, El_3)
 
-El_3_1 = FiniteElement('CG', tetrahedron, 1)
-FS_3_1 = FunctionSpace(mesh_3d, El_3_1)
+#El_3_1 = FiniteElement('CG', tetrahedron, 1)
+#FS_3_1 = FunctionSpace(mesh_3d, El_3_1)
 
-e_v = Function(FS)
-dedz_v = Function(FS)
+e_v_0 = Function(FS_0)
+dedz_v_0 = Function(FS_0)
 
 E_series = TimeSeries(route_0 + 'results/e_field/E_mid_20')
 dEdz_series = TimeSeries(route_0 + 'results/e_field/E_mid_20_dEdz')
 
-E_series.retrieve(e_v.vector(),0)
-dEdz_series.retrieve(dedz_v.vector(),0)
+E_series.retrieve(e_v_0.vector(),0)
+dEdz_series.retrieve(dedz_v_0.vector(),0)
+
+e_v = project(e_v_0, FS)
+dedz_v = project(dedz_v_0, FS)
 
 E_array = e_v.vector().get_local()
 E_max = max_norm(e_v)
