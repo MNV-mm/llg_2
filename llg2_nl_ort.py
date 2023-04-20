@@ -364,8 +364,8 @@ dEdz_series = TimeSeries(route_0 + 'results/e_field/E_mid_20_dEdz')
 E_series.retrieve(e_v_0.vector(),0)
 dEdz_series.retrieve(dedz_v_0.vector(),0)
 
-e_v = project(e_v_0, FS)
-dedz_v = project(dedz_v_0, FS)
+e_v = interpolate(e_v_0, FS)
+dedz_v = interpolate(dedz_v_0, FS)
 
 E_array = e_v.vector().get_local()
 E_max = max_norm(e_v)
@@ -462,8 +462,6 @@ intg_1 = mat*intg_0
 int_y = sp.ccode(intg_1[1]*4*sp.pi)
 
 # In[3]:
-
-m_z_bloch = project(Expression(("cos(2*atan(exp(x[1]/d)))"), degree = 4, d=1), FS_1)
 wall_type = 'bloch'# 'bloch'  'neel' 'h'
 # Define boundary condition
 if wall_type =='neel':
