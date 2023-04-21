@@ -365,8 +365,11 @@ dEdz_series.retrieve(dedz_v_0.vector(),0)
 #e_v = interpolate(e_v_0, FS)
 #dedz_v = interpolate(dedz_v_0, FS)
 
+e_v = Function(FS)
+dedz_v = Function(FS)
+
 LagrangeInterpolator.interpolate(e_v, e_v_0)
-LagrangeInterpolator.interpolate(dedz_v_0, dedz_v_0)
+LagrangeInterpolator.interpolate(dedz_v, dedz_v_0)
 
 E_array = e_v.vector().get_local()
 E_max = max_norm(e_v)
