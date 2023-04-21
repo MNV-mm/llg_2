@@ -383,9 +383,9 @@ p = g*UU0/1e-4/(2*math.sqrt(AA*kkp))*E_max
 dedz_1, dedz_2, dedz_3 = split(dedz_v)
 
 #El = VectorElement('CG', triangle, 1, dim=3)
-#El1 = FiniteElement('CG', triangle, 1)
+El1 = FiniteElement('CG', triangle, 1)
 #FS = FunctionSpace(mesh, El)
-#FS_1 = FunctionSpace(mesh,El1)
+FS_1 = FunctionSpace(mesh,El1)
 # dy = 5
 # R0 = 10
 # s_s = 0.05 #0.1
