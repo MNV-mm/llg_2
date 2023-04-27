@@ -521,6 +521,13 @@ def pe_EF(a,b,c,Lx,Ly,angle,file_str):
     
     E_series.store(e_v.vector(),0)
     dEdz_series.store(dEdz_v.vector(),0)
+    
+    hdf_E = HDF5File(mesh_2.mpi_comm(), file_str + "E_hdf_20.h5", 'w')
+    hdf_E.write(mesh_2, "/my_mesh")
+    hdf_E.write(e_v, "/e_field")
+    hdf_E.write(dEdz_v, "/dedz_field")
+    hdf_E.close()
+    
     gc.collect()
     return 0 #[FS2, FS, FS_1, FS_3, e_v]
 
