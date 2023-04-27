@@ -309,7 +309,11 @@ Ly = 200 # 30 80 40
 #FS_1, FS_3, FS_3_1, FS, e_v = DD_Hd.pe_EF(5,30,1,Lx,Ly)
 #mesh = FS.mesh()
 mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 1140, 400)
-mesh_0 = Mesh(route_0 + 'MESH.xml')
+#mesh_0 = Mesh(route_0 + 'MESH.xml')
+mesh_0 = Mesh()
+
+hdf_E = HDF5File(mesh_2.mpi_comm(), file_str + "E_hdf_20.h5", 'r')
+hdf_E.read(mesh_0, "/my_mesh")
 
 # Sub domain for Periodic boundary condition
 class PeriodicBoundary(SubDomain):
@@ -356,11 +360,15 @@ FS = FunctionSpace(mesh, El, constrained_domain=pbc)
 e_v_0 = Function(FS_0)
 dedz_v_0 = Function(FS_0)
 
-E_series = TimeSeries(route_0 + 'results/e_field/E_mid_20')
-dEdz_series = TimeSeries(route_0 + 'results/e_field/E_mid_20_dEdz')
+#E_series = TimeSeries(route_0 + 'results/e_field/E_mid_20')
+#dEdz_series = TimeSeries(route_0 + 'results/e_field/E_mid_20_dEdz')
 
-E_series.retrieve(e_v_0.vector(),0)
-dEdz_series.retrieve(dedz_v_0.vector(),0)
+#E_series.retrieve(e_v_0.vector(),0)
+#dEdz_series.retrieve(dedz_v_0.vector(),0)
+
+hdf_E.read(e_v_0, "/e_field")
+hdf_E.read(dedz_v_0, "/dedz_field")
+hdf_E.close()
 
 #e_v = interpolate(e_v_0, FS)
 #dedz_v = interpolate(dedz_v_0, FS)
