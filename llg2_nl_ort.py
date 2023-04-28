@@ -310,9 +310,9 @@ Ly = 200 # 30 80 40
 #mesh = FS.mesh()
 mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 1140, 400)
 mesh_0 = Mesh(route_0 + 'MESH.xml')
-#esh_0 = Mesh()
+#mesh_0 = Mesh()
 
-hdf_E = HDF5File(mesh.mpi_comm(), route_0 + 'results/e_field/E_hdf_20.h5', 'r')
+hdf_E = HDF5File(mesh_0.mpi_comm(), route_0 + 'results/e_field/E_hdf_20.h5', 'r')
 #hdf_E.read(mesh_0, "/my_mesh")
 
 # Sub domain for Periodic boundary condition
@@ -631,7 +631,7 @@ tol = 5E-8
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 10 #100000
+N_f = 5 #100000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
