@@ -814,3 +814,32 @@ def aa_min(Nu, Np, Mat_1, Ku, Kp, Kc):
     #plt.show()
     #fig.savefig('s30_min.png', dpi = 300)
     return results
+
+def pe_analitic():
+    """
+    Function returns C-expression (in analytical form) for electric field and its derivatives along z; 
+    Electrod length = L, rotation angle  = phi
+    """
+    L, x, y, z, phi = sp.symbols('L x[0] x[1] z phi')
+    
+    x_rot = sp.cos(phi)*x - sp.sin(phi)*y
+    
+    u_0 = -1/sp.pi*(sp.atan((L/2-x_rot)/z) - sp.atan((-L/2-x_rot)/z))
+    
+    e_x = -sp.simplify(sp.diff(u_0, x))
+    e_y = -sp.simplify(sp.diff(u_0, y))
+    e_z = -sp.simplify(sp.diff(u_0, z))
+    
+    dex_dz = -sp.simplify(sp.diff(e_x,z))
+    dey_dz = -sp.simplify(sp.diff(e_y,z))
+    dez_dz = -sp.simplify(sp.diff(e_z,z))
+    
+    e_x_c = sp.ccode(e_x)
+    e_y_c = sp.ccode(e_y)
+    e_z_c = sp.ccode(e_z)
+    
+    dex_dz_c = sp.ccode(dex_dz)
+    dey_dz_c = sp.ccode(dey_dz)
+    dez_dz_c = sp.ccode(dez_dz)
+    
+    return [e_x_c, e_y_c, e_z_c, dex_dz_c, dey_dz_c, dez_dz_c]
