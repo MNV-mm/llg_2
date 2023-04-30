@@ -309,10 +309,10 @@ Ly = 200 # 30 80 40
 #FS_1, FS_3, FS_3_1, FS, e_v = DD_Hd.pe_EF(5,30,1,Lx,Ly)
 #mesh = FS.mesh()
 mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 1140, 400)
-mesh_0 = Mesh(route_0 + 'MESH.xml')
+#mesh_0 = Mesh(route_0 + 'MESH.xml')
 #mesh_0 = Mesh()
 
-hdf_E = HDF5File(mesh.mpi_comm(), route_0 + 'results/e_field/E_hdf_20.h5', 'r')
+#hdf_E = HDF5File(mesh.mpi_comm(), route_0 + 'results/e_field/E_hdf_20.h5', 'r')
 #hdf_E.read(mesh_0, "/my_mesh")
 
 # Sub domain for Periodic boundary condition
@@ -341,7 +341,7 @@ ny = 200
 #SL_space, FS_1, FS_3, FS_3_1, FS
 
 El = VectorElement('CG', triangle, 1, dim=3)
-FS_0 = FunctionSpace(mesh_0, El, constrained_domain=pbc)
+#FS_0 = FunctionSpace(mesh_0, El, constrained_domain=pbc)
 
 FS = FunctionSpace(mesh, El, constrained_domain=pbc)
 
@@ -357,8 +357,8 @@ FS = FunctionSpace(mesh, El, constrained_domain=pbc)
 #El_3_1 = FiniteElement('CG', tetrahedron, 1)
 #FS_3_1 = FunctionSpace(mesh_3d, El_3_1)
 
-e_v_0 = Function(FS_0)
-dedz_v_0 = Function(FS_0)
+#e_v_0 = Function(FS_0)
+#dedz_v_0 = Function(FS_0)
 
 #E_series = TimeSeries(route_0 + 'results/e_field/E_mid_20')
 #dEdz_series = TimeSeries(route_0 + 'results/e_field/E_mid_20_dEdz')
@@ -366,18 +366,30 @@ dedz_v_0 = Function(FS_0)
 #E_series.retrieve(e_v_0.vector(),0)
 #dEdz_series.retrieve(dedz_v_0.vector(),0)
 
-hdf_E.read(e_v_0, "/e_field")
-hdf_E.read(dedz_v_0, "/dedz_field")
-hdf_E.close()
+#hdf_E.read(e_v_0, "/e_field")
+#hdf_E.read(dedz_v_0, "/dedz_field")
+#hdf_E.close()
 
 #e_v = interpolate(e_v_0, FS)
 #dedz_v = interpolate(dedz_v_0, FS)
 
-e_v = Function(FS)
-dedz_v = Function(FS)
+e_x_c, e_y_c, e_z_c, dex_dz_c, dey_dz_c, dez_dz_c = DD_Hd.pe_analitic()
 
-LagrangeInterpolator.interpolate(e_v, e_v_0)
-LagrangeInterpolator.interpolate(dedz_v, dedz_v_0)
+#e_v = Function(FS)
+#dedz_v = Function(FS)
+
+#LagrangeInterpolator.interpolate(e_v, e_v_0)
+#LagrangeInterpolator.interpolate(dedz_v, dedz_v_0)
+
+L_e = 95*2
+phi_e = 20/180*np.pi
+z_0 = 95
+
+e_v_expr = Expression((e_x_c, e_y_c, e_z_c), L = L_e, phi = phi_e, z = z_0, degree = 4)
+dedz_v_expr = Expression((dex_dz_c, dey_dz_c, dez_dz_c), L = L_e, phi = phi_e, z = z_0, degree = 4)
+
+e_v = project(e_v_expr, FS)
+dedz_v = project(dedz_v_expr, FS)
 
 E_array = e_v.vector().get_local()
 E_max = max_norm(e_v)
@@ -753,9 +765,9 @@ vtkfile_m << (m, T)
 vtkfile_hd_v << (phi, T)
 #vtkfile_hd_s << hd_s
 vtkfile_diff << (diffr, T)
-file_txt = open(route_0 + 'results/avg_table.txt','a')
-file_txt.write(data)
-file_txt.close()
+#file_txt = open(route_0 + 'results/avg_table.txt','a')
+#file_txt.write(data)
+#file_txt.close()
 time_new.store(m.vector(),i)
 print(i)
 # In[ ]:
