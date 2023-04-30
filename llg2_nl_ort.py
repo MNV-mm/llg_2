@@ -380,7 +380,7 @@ LagrangeInterpolator.interpolate(e_v, e_v_0)
 LagrangeInterpolator.interpolate(dedz_v, dedz_v_0)
 
 E_array = e_v.vector().get_local()
-E_max = MPI.max(max_norm(e_v))
+E_max = MPI.max(comm, max_norm(e_v))
 dEdz_array = dedz_v.vector().get_local()
 
 e_v.vector()[:] = E_array/E_max
