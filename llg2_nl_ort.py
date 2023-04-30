@@ -750,7 +750,11 @@ mwrite(route_0 + 'results/avg_table.txt', data, 'a')
 #file_txt = open(route_0 + 'results/avg_table.txt','a')
 #file_txt.write(data)
 #file_txt.close()
-time_new.store(m.vector(),i)
+hdf_m = HDF5File(mesh.mpi_comm(), route_0 + 'results/series_new/m_final', 'w')
+hdf_m.write(mesh, "/my_mesh")
+hdf_m.write(m, "/m_field")
+hdf_m.write(phi, "/demag_pot")
+hdf_m.close()
 print(i)
 # In[ ]:
 
