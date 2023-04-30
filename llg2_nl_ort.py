@@ -385,8 +385,8 @@ L_e = 95*2
 phi_e = 20/180*np.pi
 z_0 = 95
 
-e_v_expr = Expression((e_x_c, e_y_c, e_z_c), L = L_e, phi = phi_e, z = z_0, degree = 4)
-dedz_v_expr = Expression((dex_dz_c, dey_dz_c, dez_dz_c), L = L_e, phi = phi_e, z = z_0, degree = 4)
+e_v_expr = Expression((e_x_c, e_y_c, e_z_c), L = L_e, phi = phi_e, z = z_0, degree = 6)
+dedz_v_expr = Expression((dex_dz_c, dey_dz_c, dez_dz_c), L = L_e, phi = phi_e, z = z_0, degree = 6)
 
 e_v = project(e_v_expr, FS)
 dedz_v = project(dedz_v_expr, FS)
@@ -614,6 +614,10 @@ vtkfile_hd_v = File(route_0 + 'results/graphs/hd_v.pvd')
 #vtkfile_hd_s = File(route_0 + 'results/graphs/hd_s.pvd')
 
 vtkfile_e = File(route_0 + 'results/graphs/e.pvd')
+
+e_file =  XDMFFile(route_0 + 'results/graphs/e_file.xdmf')
+e_file.write(e_f)
+e_file.close()
 #vtkfile_P = File(route_0 + 'results/graphs/P.pvd')
 # vtkfile_l = File('graphs/l.pvd')
 #vtkfile_m << m
