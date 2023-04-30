@@ -309,10 +309,10 @@ Ly = 200 # 30 80 40
 #FS_1, FS_3, FS_3_1, FS, e_v = DD_Hd.pe_EF(5,30,1,Lx,Ly)
 #mesh = FS.mesh()
 mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 1140, 400)
-#mesh_0 = Mesh(route_0 + 'MESH.xml')
+mesh_0 = Mesh(route_0 + 'MESH.xml')
 #mesh_0 = Mesh()
 
-#hdf_E = HDF5File(mesh.mpi_comm(), route_0 + 'results/e_field/E_hdf_20.h5', 'r')
+hdf_E = HDF5File(mesh.mpi_comm(), route_0 + 'results/e_field/E_hdf_20.h5', 'r')
 #hdf_E.read(mesh_0, "/my_mesh")
 
 # Sub domain for Periodic boundary condition
@@ -341,7 +341,7 @@ ny = 200
 #SL_space, FS_1, FS_3, FS_3_1, FS
 
 El = VectorElement('CG', triangle, 1, dim=3)
-#FS_0 = FunctionSpace(mesh_0, El, constrained_domain=pbc)
+FS_0 = FunctionSpace(mesh_0, El, constrained_domain=pbc)
 
 FS = FunctionSpace(mesh, El, constrained_domain=pbc)
 
@@ -357,8 +357,8 @@ FS = FunctionSpace(mesh, El, constrained_domain=pbc)
 #El_3_1 = FiniteElement('CG', tetrahedron, 1)
 #FS_3_1 = FunctionSpace(mesh_3d, El_3_1)
 
-#e_v_0 = Function(FS_0)
-#dedz_v_0 = Function(FS_0)
+e_v_0 = Function(FS_0)
+dedz_v_0 = Function(FS_0)
 
 #E_series = TimeSeries(route_0 + 'results/e_field/E_mid_20')
 #dEdz_series = TimeSeries(route_0 + 'results/e_field/E_mid_20_dEdz')
@@ -366,33 +366,21 @@ FS = FunctionSpace(mesh, El, constrained_domain=pbc)
 #E_series.retrieve(e_v_0.vector(),0)
 #dEdz_series.retrieve(dedz_v_0.vector(),0)
 
-#hdf_E.read(e_v_0, "/e_field")
-#hdf_E.read(dedz_v_0, "/dedz_field")
-#hdf_E.close()
+hdf_E.read(e_v_0, "/e_field")
+hdf_E.read(dedz_v_0, "/dedz_field")
+hdf_E.close()
 
 #e_v = interpolate(e_v_0, FS)
 #dedz_v = interpolate(dedz_v_0, FS)
 
-e_x_c, e_y_c, e_z_c, dex_dz_c, dey_dz_c, dez_dz_c = DD_Hd.pe_analitic()
+e_v = Function(FS)
+dedz_v = Function(FS)
 
-#e_v = Function(FS)
-#dedz_v = Function(FS)
-
-#LagrangeInterpolator.interpolate(e_v, e_v_0)
-#LagrangeInterpolator.interpolate(dedz_v, dedz_v_0)
-
-L_e = 95*2
-phi_e = 20/180*np.pi
-z_0 = 95
-
-e_v_expr = Expression((e_x_c, e_y_c, e_z_c), L = L_e, phi = phi_e, z = z_0, degree = 6)
-dedz_v_expr = Expression((dex_dz_c, dey_dz_c, dez_dz_c), L = L_e, phi = phi_e, z = z_0, degree = 6)
-
-e_v = project(e_v_expr, FS)
-dedz_v = project(dedz_v_expr, FS)
+LagrangeInterpolator.interpolate(e_v, e_v_0)
+LagrangeInterpolator.interpolate(dedz_v, dedz_v_0)
 
 E_array = e_v.vector().get_local()
-E_max = max_norm(e_v)
+E_max = MPI.max(max_norm(e_v))
 dEdz_array = dedz_v.vector().get_local()
 
 e_v.vector()[:] = E_array/E_max
@@ -607,24 +595,13 @@ hy = project(Hy_expr,FS_1)
 #u_n = Function(V)
 #u_n1, u_n2, u_n3 = split(u_n)
 #/media/mnv/A2E41E9EE41E74AF/
-vtkfile_m = File(route_0 + 'results/graphs/m.pvd')
-vtkfile_cr = File(route_0 + 'results/graphs/cross.pvd')
-vtkfile_diff = File(route_0 + 'results/graphs/diff.pvd')
-vtkfile_hd_v = File(route_0 + 'results/graphs/hd_v.pvd')
-#vtkfile_hd_s = File(route_0 + 'results/graphs/hd_s.pvd')
-
-vtkfile_e = File(route_0 + 'results/graphs/e.pvd')
+m_file = XDMFFile(route_0 + "results/graphs/m.xdmf")
+diff_file =  XDMFFile(route_0 + "results/graphs/diff.xdmf")
+hd_v_file =  XDMFFile(route_0 + "results/graphs/hd_v.xdmf")
 
 e_file =  XDMFFile(route_0 + 'results/graphs/e_file.xdmf')
 e_file.write(e_f)
 e_file.close()
-#vtkfile_P = File(route_0 + 'results/graphs/P.pvd')
-# vtkfile_l = File('graphs/l.pvd')
-#vtkfile_m << m
-vtkfile_e << e_f
-# vtkfile_m2 << m2
-# vtkfile_m3 << m3
-#vtkfile_m_3_in << m3
 # In[4]:
 # In[5]
 mx, my, mz = m.split()
@@ -717,13 +694,11 @@ while j <= 10:
     #file_txt = open(route_0 + 'results/avg_table.txt','a')
     #file_txt.write(data)
     #file_txt.close()
-    mwrite(route_0 + 'results/avg_table.txt', title, 'a')
+    mwrite(route_0 + 'results/avg_table.txt', data, 'a')
     if i%1 == 0:
-        vtkfile_m << (m, T)
-        vtkfile_hd_v << (phi, T)
-        #vtkfile_hd_s << hd_s
-        vtkfile_diff << (diffr, T)
-        #vtkfile_cr << cr
+        m_file.write(m, T)
+        hd_v_file.write(phi, T)
+        diff_file.write(diffr, T)
     T = T + dt    
     # vtkfile_m2 << m2
     # vtkfile_m3 << m3
@@ -732,7 +707,6 @@ while j <= 10:
     
     v1, v2, v3 = v.split()
     #P = project(m*(m1.dx(0) + m2.dx(1)) - as_vector((m1*m1.dx(0)+m2*m1.dx(1), m1*m2.dx(0)+m2*m2.dx(1), m1*m3.dx(0)+m2*m3.dx(1))), FS_3)
-    #vtkfile_P << P
     # error = (m-v)**2*dx
     # E = sqrt(abs(assemble(error)))/(Lx*Ly)/dt
     delta_E = E-E_old
@@ -765,10 +739,14 @@ while j <= 10:
 
 
 #plot(v3)
-vtkfile_m << (m, T)
-vtkfile_hd_v << (phi, T)
-#vtkfile_hd_s << hd_s
-vtkfile_diff << (diffr, T)
+m_file.write(m, T)
+m_file.close()
+hd_v_file.write(phi, T)
+hd_v_file.close()
+diff_file.write(diffr, T)
+diff_file.close()
+
+mwrite(route_0 + 'results/avg_table.txt', data, 'a')
 #file_txt = open(route_0 + 'results/avg_table.txt','a')
 #file_txt.write(data)
 #file_txt.close()
