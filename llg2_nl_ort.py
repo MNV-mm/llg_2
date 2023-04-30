@@ -164,7 +164,7 @@ def dmdn(m,n):
     v3 = dot(grad(m3),n)
     return as_vector((v1,v2,v3))
 
-def mwrite(filename, out, a_type):
+def mwrite(filename, out, a_type, rank):
     MPI.barrier(comm)
     if rank == 0:
         file_txt = open(filename,a_type)
@@ -643,7 +643,7 @@ title = 't' + ', '  + 'w_ex' + ', '  + 'w_a' + ', ' + 'w_a_u' + ', ' + 'w_a_p' +
 #file_txt = open(route_0 + 'results/avg_table.txt','w')
 #file_txt.write(title)
 #file_txt.close()
-mwrite(route_0 + 'results/avg_table.txt', title, 'w')
+mwrite(route_0 + 'results/avg_table.txt', title, 'w', rank)
 while j <= 10:
     if i>=N_f:
         print(N_f, ' iterations reached')
@@ -694,7 +694,7 @@ while j <= 10:
     #file_txt = open(route_0 + 'results/avg_table.txt','a')
     #file_txt.write(data)
     #file_txt.close()
-    mwrite(route_0 + 'results/avg_table.txt', data, 'a')
+    mwrite(route_0 + 'results/avg_table.txt', data, 'a', rank)
     if i%1 == 0:
         m_file.write(m, T)
         hd_v_file.write(phi, T)
@@ -746,7 +746,7 @@ hd_v_file.close()
 diff_file.write(diffr, T)
 diff_file.close()
 
-mwrite(route_0 + 'results/avg_table.txt', data, 'a')
+mwrite(route_0 + 'results/avg_table.txt', data, 'a', rank)
 #file_txt = open(route_0 + 'results/avg_table.txt','a')
 #file_txt.write(data)
 #file_txt.close()
