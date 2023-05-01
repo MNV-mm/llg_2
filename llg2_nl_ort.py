@@ -168,7 +168,7 @@ def mwrite(filename, out, a_type, rank):
     MPI.barrier(comm)
     if rank == 0:
         file_txt = open(filename,a_type)
-        file_txt.write(title)
+        file_txt.write(out)
         file_txt.close()
 
 comm = MPI.comm_world
