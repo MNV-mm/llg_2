@@ -178,7 +178,7 @@ size = comm.Get_size()
 
 alpha1 = 2 #0.9 #0.1 #0.0001 
 alpha2 = 10   #parameter alpha
-UU0 = 1*10/3 #Voltage (CGS)
+UU0 = 0*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -308,7 +308,7 @@ Ly = 200 # 30 80 40
 
 #FS_1, FS_3, FS_3_1, FS, e_v = DD_Hd.pe_EF(5,30,1,Lx,Ly)
 #mesh = FS.mesh()
-mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 1140, 400)
+mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 2850, 1000) # 1140, 400
 mesh_0 = Mesh(route_0 + 'MESH.xml')
 #mesh_0 = Mesh()
 
@@ -624,7 +624,7 @@ tol = 5E-8
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 2 #100000
+N_f = 100000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
