@@ -381,12 +381,17 @@ LagrangeInterpolator.interpolate(dedz_v, dedz_v_0)
 
 E_array = e_v.vector().get_local()
 E_max = MPI.max(comm, max_norm(e_v))
+
+print("E_max = ", E_max)
+
 dEdz_array = dedz_v.vector().get_local()
 
 e_v.vector()[:] = E_array/E_max
 dedz_v.vector()[:] = dEdz_array/E_max
 
-p = g*UU0/1e-4/(2*math.sqrt(AA*kkp))*E_max
+p = g*UU0/math.sqrt(AA/kkp)/(2*math.sqrt(AA*kkp))*E_max
+
+print("p = ", p)
 
 dedz_1, dedz_2, dedz_3 = split(dedz_v)
 
@@ -515,17 +520,23 @@ BC = DirichletBC(FS, ub, my_boundary)
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
 
-in_type = 'new'
+in_type = 'old'
 if in_type == 'old':
-    t = 812.4000000000477
+    hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/s30_m_old.h5', 'r')
     m = Function(FS)
-    #time_old.retrieve(m.vector(), t)
+    hdf_m_old.read(m, "/m_field")
+    phi_0 = Function(FS_1)
+    hdf_m_old.read(phi_0, "/demag_pot")
+    hdf_m_old.close()
 if in_type == 'new':
     m = project(ub,FS)
+    #phi_0 = Function(FS_1)
+    phi_0 = project(phi_nl, FS_1)
 if in_type == 'rand':
     m = project(ub,FS)
     m = DD_Hd.rand_vec(m, 0.001)
     m = norm_sol_s(m,FS)
+    phi_0 = project(phi_nl, FS_1)
     
 m_b = project(ub,FS)
 m = norm_sol_s(m, FS)
@@ -607,12 +618,7 @@ e_file.close()
 mx, my, mz = m.split()
 m_b_1, m_b_2, m_b_3 = split(m_b)
 m_b_2d = as_vector((m_b_1,m_b_2))
-phi_0 = Function(FS_1)
-if wall_type == 'bloch':
-    #phi_0.vector()[:] = np.zeros(mx.compute_vertex_values().shape)
-    phi_0 = project(phi_nl, FS_1)
-if wall_type == 'neel':
-    phi_0 = project(phi_nl, FS_1)
+
 phi = DD_Hd.pot(m, wall_type, beta, phi_0, m_b_2d, pbc)
 i = 0
 j = 0
