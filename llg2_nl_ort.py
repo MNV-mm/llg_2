@@ -178,7 +178,7 @@ size = comm.Get_size()
 
 alpha1 = 2 #0.9 #0.1 #0.0001 
 alpha2 = 10   #parameter alpha
-UU0 = 1*10/3 #Voltage (CGS)
+UU0 = 0*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -520,7 +520,7 @@ BC = DirichletBC(FS, ub, my_boundary)
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
 
-in_type = 'old'
+in_type = 'new'
 if in_type == 'old':
     hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/s30_m_old.h5', 'r')
     m = Function(FS)
@@ -756,7 +756,7 @@ mwrite(route_0 + 'results/avg_table.txt', data, 'a', rank)
 #file_txt = open(route_0 + 'results/avg_table.txt','a')
 #file_txt.write(data)
 #file_txt.close()
-hdf_m = HDF5File(mesh.mpi_comm(), route_0 + 'results/series_new/m_final', 'w')
+hdf_m = HDF5File(mesh.mpi_comm(), route_0 + 'results/series_new/m_final.h5', 'w')
 hdf_m.write(mesh, "/my_mesh")
 hdf_m.write(m, "/m_field")
 hdf_m.write(phi, "/demag_pot")
