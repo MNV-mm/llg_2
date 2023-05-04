@@ -178,7 +178,7 @@ size = comm.Get_size()
 
 alpha1 = 2 #0.9 #0.1 #0.0001 
 alpha2 = 10   #parameter alpha
-UU0 = 0*10/3 #Voltage (CGS)
+UU0 = 1*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -520,9 +520,9 @@ BC = DirichletBC(FS, ub, my_boundary)
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
 
-in_type = 'new'
+in_type = 'old'
 if in_type == 'old':
-    hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/s30_m_old.h5', 'r')
+    hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/m_final.h5', 'r')
     m = Function(FS)
     hdf_m_old.read(m, "/m_field")
     phi_0 = Function(FS_1)
