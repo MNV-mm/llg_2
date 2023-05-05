@@ -351,6 +351,14 @@ def SL_pot_s(u):
 #vtkfile_hd_2 << Hd
 
 def pe_EF(a,b,c,Lx,Ly,angle,file_str):
+    def max_norm(u):
+        u1, u2, u3 = u.split()
+        V1 = u1.compute_vertex_values()
+        V2 = u2.compute_vertex_values()
+        V3 = u3.compute_vertex_values()
+        norm_prev = np.max(np.sqrt(V1*V1 + V2*V2 + V3*V3))
+        return norm_prev
+
     ## BEM part
     grid = bempp.api.shapes.cuboid(length=(2*a, 2*b, 2*c), origin=(-a, -b, c+0.5+a), h=3.0)
     coord = grid.vertices
@@ -515,6 +523,8 @@ def pe_EF(a,b,c,Lx,Ly,angle,file_str):
     
     e_v = project(as_vector((e1,e2,e3)), FS_3)
     dEdz_v = project(as_vector((dE1dz_f, dE2dz_f, dE3dz_f)), FS_3)
+    
+    print("E_max = ", max_norm(e_v))
     
     E_series = TimeSeries(file_str+'E_mid_20')
     dEdz_series = TimeSeries(file_str+'E_mid_20_dEdz')
