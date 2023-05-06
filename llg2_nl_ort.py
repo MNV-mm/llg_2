@@ -176,9 +176,9 @@ comm = MPI.comm_world
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-alpha1 = 2 #0.9 #0.1 #0.0001 
+alpha1 = 1.5 #0.9 #0.1 #0.0001 
 alpha2 = 10   #parameter alpha
-UU0 = 1*10/3 #Voltage (CGS)
+UU0 = 2*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -727,7 +727,7 @@ while j <= 10:
         count += 1
     else:
         count = 0
-    if count >= 50:
+    if count >= 10:
         count = 0
         dt = round(dt + dt/2, 4) #0.05
         Dt.assign(dt)
