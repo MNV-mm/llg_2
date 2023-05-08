@@ -176,7 +176,7 @@ comm = MPI.comm_world
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-alpha1 = 1.5 #0.9 #0.1 #0.0001 
+alpha1 = 0.9 #0.1 #0.0001 
 alpha2 = 10   #parameter alpha
 UU0 = 2*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
@@ -623,7 +623,7 @@ phi = DD_Hd.pot(m, wall_type, beta, phi_0, m_b_2d, pbc)
 i = 0
 j = 0
 count = 0
-dt = 0.5 #0.1 #0.025 ## 0.01
+dt = 0.002 #0.1 #0.025 ## 0.01
 Dt = Constant(dt)
 T =  1
 tol = 1E-7
