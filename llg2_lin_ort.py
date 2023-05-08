@@ -411,7 +411,7 @@ FS_1 = FunctionSpace(mesh,El1)
 # p2 = Point(Lx/2,Ly/2)
 # mesh = RectangleMesh(p1,p2,nx,ny)
 #mesh = DD_Hd.wall_mesh(Lx,Ly,dy,R0,s_s,s_L)
-v = Function(FS) #TrialFunction
+v = TrialFunction(FS) #TrialFunction
 w = TestFunction(FS)
 #K = FunctionSpace(mesh,El2)
 ##########################hd_side = DD_Hd.side_pot(FS_1, FS_3_1, FS_3_1, FS, 50, z_max, Lx, Ly, 240)
@@ -636,12 +636,12 @@ oo = Constant(0)
 PI = Constant(math.pi)
 Hd_v_y = as_vector((oo, Constant(0.), oo)) #Constant(-26/2) on y axis
 #hd_s+hd_ext
-F = dot(w,(v-m)/Dt-al*cross(m,(v-m)/Dt))*dx \
-+ (1-th)**2*dot(w,cross(m,h_rest(m,pp,e_f,dedz_v,M_s*M_s/2/kp*phi,M_s*M_s/2/kp*(hd_ext + Hd_v_y), ku, kp, kc, Nu, Np, at)))*dx  + (1-th)*th*dot(w,cross(v,h_rest(m,pp,e_f,dedz_v,M_s*M_s/2/kp*phi,M_s*M_s/2/kp*(hd_ext + Hd_v_y), ku, kp, kc, Nu, Np, at)))*dx + (1-th)*th*dot(w,cross(m,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/kp*phi,M_s*M_s/2/kp*(hd_ext + Hd_v_y), ku, kp, kc, Nu, Np, at)))*dx + th**2*dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/kp*phi,M_s*M_s/2/kp*(hd_ext + Hd_v_y), ku, kp, kc, Nu, Np, at)))*dx \
-    - (1-th)**2*dot_v(m,m,w,pp,e_f)*dx - (1-th)*th*dot_v(m,v,w,pp,e_f)*dx - (1-th)*th*dot_v(v,m,w,pp,e_f)*dx - th**2*dot_v(v,v,w,pp,e_f)*dx 
-    # \
-    #     + dot(w,cross(m_b,dmdn(m_b,n)))*ds + 2*pp*dot(w,cross(m_b,e_f))*dot(to_2d(m_b),n)*ds
-Jac = derivative(F,v)
+
+F = dot(w,(v-m)/Dt-al*cross(m,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(m,pp,e_f,dedz_v,M_s*M_s/2/kp*phi,M_s*M_s/2/kp*(hd_ext + Hd_v_y), ku, kp, kc, Nu, Np, at)))*dx - dot_v(m,v,w,pp,e_f)*dx
+
+a = lhs(F)
+L = rhs(F)
+
 diffr = Function(FS)
 Hd = Function(FS)
 
@@ -663,7 +663,19 @@ while j <= 10:
         # + (1-th)**2*dot(w,cross(m,h_rest(m,pp,e_f)))*dx  + (1-th)*th*dot(w,cross(v,h_rest(m,pp,e_f)))*dx + (1-th)*th*dot(w,cross(m,h_rest(v,pp,e_f)))*dx + th**2*dot(w,cross(v,h_rest(v,pp,e_f)))*dx \
         #     - (1-th)**2*dot_v(m,m,w,pp,e_f)*dx - (1-th)*th*dot_v(m,v,w,pp,e_f)*dx - (1-th)*th*dot_v(v,m,w,pp,e_f)*dx - th**2*dot_v(v,v,w,pp,e_f)*dx \
         #         + 2*pp*dot(w,cross(m_b,e_f))*dot(to_2d(m_b),n)*ds
-    solve(F==0, v, BC, J=Jac) # BC!!!
+    A = assemble(a)
+    b = assemble(L)
+    BC.apply(A,b)
+    
+    solver = KrylovSolver('gmres', 'hypre_euclid')
+    solver.parameters["nonzero_initial_guess"] = True
+    
+    v = Function(FS)
+    v.vector()[:] = m.vector()
+    V = v.vector()
+    
+    solver.solve(A, V, b)
+    v.vector()[:] = V
     
     v = norm_sol_s(v, FS)
     V = v.vector()
