@@ -713,7 +713,7 @@ while j <= 10:
     #file_txt.write(data)
     #file_txt.close()
     mwrite(route_0 + 'results/avg_table.txt', data, 'a', rank)
-    if i%50 == 0:
+    if i%100 == 0:
         m_file.write(m, T)
         hd_v_file.write(phi, T)
         diff_file.write(diffr, T)
@@ -735,7 +735,7 @@ while j <= 10:
         j += 1
     i += 1
     
-    if (abs(delta_E/E) <= 5E-3):# and (delta_E < 0):
+    if (abs(delta_E/E) <= 5E-9):# and (delta_E < 0):
         count += 1
     else:
         count = 0
