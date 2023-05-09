@@ -669,6 +669,8 @@ while j <= 10:
     
     solver = KrylovSolver('gmres', 'hypre_euclid')
     solver.parameters["nonzero_initial_guess"] = True
+    solver.parameters["absolute_tolerance"] = 1E-10
+    solver.parameters["relative_tolerance"] = 1E-9
     
     v = Function(FS)
     v.vector()[:] = m.vector()
