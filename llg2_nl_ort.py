@@ -724,7 +724,7 @@ while j <= 10:
         j += 1
     i += 1
     
-    if (abs(delta_E/E) <= 5E-3):# and (delta_E < 0):
+    if (abs(delta_E/E) <= 5E-8):# and (delta_E < 0):
         count += 1
     else:
         count = 0
