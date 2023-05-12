@@ -128,9 +128,9 @@ def dot_v(m,mm,w,pp,e_f):
     mm1, mm2, mm3 = split(m)
     e1, e2, e3 = split(e_f)
     #w1, w2, w3 = split(w)
-    expr = dot(grad(cross(w,m)[0]),grad(mm1) - 2*pp*e1*to_2d(mm)) + \
-        dot(grad(cross(w,m)[1]),grad(mm2) - 2*pp*e2*to_2d(mm)) + \
-            dot(grad(cross(w,m)[2]),grad(mm3) - 2*pp*e3*to_2d(mm))
+    expr = dot(grad(cross(w,m)[0]),grad(mm1) + 2*pp*e1*to_2d(mm)) + \
+        dot(grad(cross(w,m)[1]),grad(mm2) + 2*pp*e2*to_2d(mm)) + \
+            dot(grad(cross(w,m)[2]),grad(mm3) + 2*pp*e3*to_2d(mm))
     return expr
 
 def dots_v(m,mm,w,pp,e_f):
