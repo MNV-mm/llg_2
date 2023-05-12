@@ -308,7 +308,7 @@ Ly = 200 # 30 80 40
 
 #FS_1, FS_3, FS_3_1, FS, e_v = DD_Hd.pe_EF(5,30,1,Lx,Ly)
 #mesh = FS.mesh()
-mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 5*570, 5*200) # 1140, 400
+mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 4*570, 4*200) # 1140, 400
 mesh_0 = Mesh(route_0 + 'MESH.xml')
 #mesh_0 = Mesh()
 
@@ -520,7 +520,7 @@ BC = DirichletBC(FS, ub, my_boundary)
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
 
-in_type = 'new'
+in_type = 'old'
 if in_type == 'old':
     hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/m_final.h5', 'r')
     m = Function(FS)
