@@ -178,7 +178,7 @@ size = comm.Get_size()
 
 alpha1 = 0.9 #0.1 #0.0001 
 alpha2 = 10   #parameter alpha
-UU0 = 0*10/3 #Voltage (CGS)
+UU0 = 5*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -203,7 +203,7 @@ route_0 = '/home/mnv/llg_nl/'
 
 theta_0 = 0*math.pi/4
 
-rr0 = 0.00003 # cm - effective electrode radius
+rr0 = 0.001 # cm - effective electrode radius
 dd = math.sqrt(AA/kkp)# characteristic domain wall width
 beta = math.sqrt(1+2*math.pi*M_s**2/kku)
 #beta_n = math.sqrt(1-(kkp-2*math.pi*M_s**2)/kku)
@@ -357,8 +357,8 @@ FS = FunctionSpace(mesh, El, constrained_domain=pbc)
 #El_3_1 = FiniteElement('CG', tetrahedron, 1)
 #FS_3_1 = FunctionSpace(mesh_3d, El_3_1)
 
-e_v_0 = Function(FS_0)
-dedz_v_0 = Function(FS_0)
+#e_v_0 = Function(FS_0)
+#dedz_v_0 = Function(FS_0)
 
 #E_series = TimeSeries(route_0 + 'results/e_field/E_mid_20')
 #dEdz_series = TimeSeries(route_0 + 'results/e_field/E_mid_20_dEdz')
@@ -366,34 +366,34 @@ dedz_v_0 = Function(FS_0)
 #E_series.retrieve(e_v_0.vector(),0)
 #dEdz_series.retrieve(dedz_v_0.vector(),0)
 
-hdf_E.read(e_v_0, "/e_field")
-hdf_E.read(dedz_v_0, "/dedz_field")
-hdf_E.close()
+#hdf_E.read(e_v_0, "/e_field")
+#hdf_E.read(dedz_v_0, "/dedz_field")
+#hdf_E.close()
 
 #e_v = interpolate(e_v_0, FS)
 #dedz_v = interpolate(dedz_v_0, FS)
 
-e_v = Function(FS)
-dedz_v = Function(FS)
+#e_v = Function(FS)
+#dedz_v = Function(FS)
 
-LagrangeInterpolator.interpolate(e_v, e_v_0)
-LagrangeInterpolator.interpolate(dedz_v, dedz_v_0)
+#LagrangeInterpolator.interpolate(e_v, e_v_0)
+#LagrangeInterpolator.interpolate(dedz_v, dedz_v_0)
 
-E_array = e_v.vector().get_local()
-E_max = MPI.max(comm, max_norm(e_v))
+#E_array = e_v.vector().get_local()
+#E_max = MPI.max(comm, max_norm(e_v))
 
-print("E_max = ", E_max)
+#print("E_max = ", E_max)
 
-dEdz_array = dedz_v.vector().get_local()
+#dEdz_array = dedz_v.vector().get_local()
 
-e_v.vector()[:] = E_array/E_max
-dedz_v.vector()[:] = dEdz_array/E_max
+#e_v.vector()[:] = E_array/E_max
+#dedz_v.vector()[:] = dEdz_array/E_max
 
-p = g*UU0/math.sqrt(AA/kkp)/(2*math.sqrt(AA*kkp))*E_max
+#p = g*UU0/math.sqrt(AA/kkp)/(2*math.sqrt(AA*kkp))*E_max
 
-print("p = ", p)
+#print("p = ", p)
 
-dedz_1, dedz_2, dedz_3 = split(dedz_v)
+#dedz_1, dedz_2, dedz_3 = split(dedz_v)
 
 #El = VectorElement('CG', triangle, 1, dim=3)
 El1 = FiniteElement('CG', triangle, 1)
@@ -417,21 +417,34 @@ w = TestFunction(FS)
 ##########################hd_side = DD_Hd.side_pot(FS_1, FS_3_1, FS_3_1, FS, 50, z_max, Lx, Ly, 240)
 
 # In[] # Symbolic expressions
-# x, y, z = sp.symbols('x y z')
-# xx, yy = sp.symbols('x[0] x[1]')
-# x0, y0 = sp.symbols('x0 y0')
-# d, r0, U0 = sp.symbols('d r0 U0')
+x, y, z = sp.symbols('x y z')
+xx, yy = sp.symbols('x[0] x[1]')
+x0, y0 = sp.symbols('x0 y0')
+d, r0, U0 = sp.symbols('d r0 U0')
 
-# f_expr = U0*r0/sp.sqrt((r0-z)**2+((x-x0)**2 + (y-y0)**2))
-# E1 = -sp.diff(f_expr,x)
-# E1 = sp.simplify(E1.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
-# E2 = -sp.diff(f_expr,y)
-# E2 = sp.simplify(E2.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
-# E3 = -sp.diff(f_expr,z)
-# E3 = sp.simplify(E3.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
-# E1_c=sp.ccode(E1)
-# E2_c=sp.ccode(E2)
-# E3_c=sp.ccode(E3)
+f_expr = U0*r0/sp.sqrt((r0-z)**2+((x-x0)**2 + (y-y0)**2))
+E1 = -sp.diff(f_expr,x)
+dE1_dz = sp.diff(E1,z)
+E1 = sp.simplify(E1.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
+dE1_dz = sp.simplify(dE1_dz.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
+
+E2 = -sp.diff(f_expr,y)
+dE2_dz = sp.diff(E2,z)
+E2 = sp.simplify(E2.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
+dE2_dz = sp.simplify(dE2_dz.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
+
+E3 = -sp.diff(f_expr,z)
+dE3_dz = sp.diff(E3,z)
+E3 = sp.simplify(E3.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
+dE3_dz = sp.simplify(dE3_dz.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
+
+E1_c=sp.ccode(E1)
+E2_c=sp.ccode(E2)
+E3_c=sp.ccode(E3)
+
+dE1_dz_c = sp.ccode(dE1_dz)
+dE2_dz_c = sp.ccode(dE2_dz)
+dE3_dz_c = sp.ccode(dE3_dz)
 # #print(E3_c)
 
 # pe_p_str = DD_Hd.pe_p(1,5,20,1)
@@ -498,12 +511,17 @@ phi_nl = Expression(int_y, degree = 4, ph_0 = ph_0, th_0 = th_0) # Expression("4
 Hy_expr = Expression("-(5.5 + 0.00000002*(pow(x[1],6) + 300000*pow(x[1],2)))", degree = 4)
 
 # Define electric field
-electrode_type = 'plane' # 'plane'
+electrode_type = 'circle' # 'plane'
 if electrode_type == 'circle':
     e1 = Expression((E1_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = xx0, y0 = yy0)   
     e2 = Expression((E2_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = xx0, y0 = yy0)
     e3 = Expression((E3_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = xx0, y0 = yy0)
     e_v = Expression((E1_c, E2_c, E3_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = xx0, y0 = yy0)
+    e_v = project(e_v, FS)
+    dedz_v = Expression((dE1_dz_c, dE2_dz_c, dE3_dz_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = xx0, y0 = yy0)
+    dedz_v = project(dedz_v, FS)
+    p = g*UU0/rr0/(2*math.sqrt(AA*kk))
+    print("p=", p)
 if electrode_type == 'plane':
     print('plane_electrode')
     #e_v = Expression((pe_ef_str[0],pe_ef_str[1],pe_ef_str[2]), degree = 4, a = a, b = b, c = c, z = -1.1*c)
@@ -630,7 +648,7 @@ tol = 1E-7
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 4000
+N_f = 100
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -715,7 +733,7 @@ while j <= 10:
     #file_txt.write(data)
     #file_txt.close()
     mwrite(route_0 + 'results/avg_table.txt', data, 'a', rank)
-    if i%1000 == 0:
+    if i%2 == 0:
         m_file.write(m, T)
         hd_v_file.write(phi, T)
         diff_file.write(diffr, T)
