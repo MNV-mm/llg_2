@@ -520,7 +520,7 @@ if electrode_type == 'circle':
     e_v = project(e_v, FS)
     dedz_v = Expression((dE1_dz_c, dE2_dz_c, dE3_dz_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = xx0, y0 = yy0)
     dedz_v = project(dedz_v, FS)
-    p = g*UU0/rr0/(2*math.sqrt(AA*kk))
+    p = g*UU0/rr0/(2*math.sqrt(AA*kkp))
     print("p=", p)
 if electrode_type == 'plane':
     print('plane_electrode')
