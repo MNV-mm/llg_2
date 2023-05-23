@@ -312,7 +312,7 @@ mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 5*570, 5*200) # 1140,
 mesh_0 = Mesh(route_0 + 'MESH.xml')
 #mesh_0 = Mesh()
 
-hdf_E = HDF5File(mesh.mpi_comm(), route_0 + 'results/e_field/E_hdf_20.h5', 'r')
+#hdf_E = HDF5File(mesh.mpi_comm(), route_0 + 'results/e_field/E_hdf_20.h5', 'r')
 #hdf_E.read(mesh_0, "/my_mesh")
 
 # Sub domain for Periodic boundary condition
