@@ -424,19 +424,16 @@ d, r0, U0 = sp.symbols('d r0 U0')
 
 f_expr = U0*r0/sp.sqrt((r0-z)**2+((x-x0)**2 + (y-y0)**2))
 E1 = -sp.diff(f_expr,x)
-dE1_dz = sp.diff(E1,z)
 E1 = sp.simplify(E1.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
-dE1_dz = sp.simplify(dE1_dz.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
+dE1_dz = sp.diff(E1,z)
 
 E2 = -sp.diff(f_expr,y)
-dE2_dz = sp.diff(E2,z)
 E2 = sp.simplify(E2.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
-dE2_dz = sp.simplify(dE2_dz.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
+dE2_dz = sp.diff(E2,z)
 
 E3 = -sp.diff(f_expr,z)
-dE3_dz = sp.diff(E3,z)
 E3 = sp.simplify(E3.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
-dE3_dz = sp.simplify(dE3_dz.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
+dE3_dz = sp.diff(E3,z)
 
 E1_c=sp.ccode(E1)
 E2_c=sp.ccode(E2)
@@ -631,6 +628,10 @@ hd_v_file =  XDMFFile(route_0 + "results/graphs/hd_v.xdmf")
 e_file =  XDMFFile(route_0 + 'results/graphs/e_file.xdmf')
 e_file.write(e_f)
 e_file.close()
+
+dedz_file =  XDMFFile(route_0 + 'results/graphs/dedz_file.xdmf')
+dedz_file.write(dedz_v)
+dedz_file.close()
 # In[4]:
 # In[5]
 mx, my, mz = m.split()
