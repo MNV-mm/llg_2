@@ -178,7 +178,7 @@ size = comm.Get_size()
 
 alpha1 = 0.0001 
 alpha2 = 10   #parameter alpha
-UU0 = 5*10/3 #Voltage (CGS)
+UU0 = 2*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -203,7 +203,7 @@ route_0 = '/home/mnv/llg_nl/'
 
 theta_0 = 0*math.pi/4
 
-rr0 = 0.001 # cm - effective electrode radius
+rr0 = 0.0005 # cm - effective electrode radius
 dd = math.sqrt(AA/kkp)# characteristic domain wall width
 beta = math.sqrt(1+2*math.pi*M_s**2/kku)
 #beta_n = math.sqrt(1-(kkp-2*math.pi*M_s**2)/kku)
@@ -424,16 +424,22 @@ d, r0, U0 = sp.symbols('d r0 U0')
 
 f_expr = U0*r0/sp.sqrt((r0-z)**2+((x-x0)**2 + (y-y0)**2))
 E1 = -sp.diff(f_expr,x)
-E1 = sp.simplify(E1.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
+E1 = sp.simplify(E1.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy)])/U0*r0)
 dE1_dz = sp.diff(E1,z)
+E1 = E1.subs([(z,0)])
+dE1_dz = dE1_dz.subs([(z,0)])
 
 E2 = -sp.diff(f_expr,y)
-E2 = sp.simplify(E2.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
+E2 = sp.simplify(E2.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy)])/U0*r0)
 dE2_dz = sp.diff(E2,z)
+E2 = E2.subs([(z,0)])
+dE2_dz = dE2_dz.subs([(z,0)])
 
 E3 = -sp.diff(f_expr,z)
-E3 = sp.simplify(E3.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(z,0),(x,xx),(y,yy)])/U0*r0)
+E3 = sp.simplify(E3.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy)])/U0*r0)
 dE3_dz = sp.diff(E3,z)
+E3 = E3.subs([(z,0)])
+dE3_dz = dE3_dz.subs([(z,0)])
 
 E1_c=sp.ccode(E1)
 E2_c=sp.ccode(E2)
