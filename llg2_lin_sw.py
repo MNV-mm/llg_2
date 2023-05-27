@@ -178,7 +178,7 @@ size = comm.Get_size()
 
 alpha1 = 0.0001 
 alpha2 = 10   #parameter alpha
-UU0 = 0*10/3 #Voltage (CGS)
+UU0 = 2*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -648,14 +648,14 @@ phi = DD_Hd.pot(m, wall_type, beta, phi_0, m_b_2d, pbc)
 i = 0
 j = 0
 count = 0
-dt = 0.001 #0.1 #0.025 ## 0.01
+dt = 0.0005 #0.001
 Dt = Constant(dt)
 T =  1
 tol = 1E-7
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 200
+N_f = 100
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -740,7 +740,7 @@ while j <= 10:
     #file_txt.write(data)
     #file_txt.close()
     mwrite(route_0 + 'results/avg_table.txt', data, 'a', rank)
-    if i%5 == 0:
+    if i%2 == 0:
         m_file.write(m, T)
         hd_v_file.write(phi, T)
         diff_file.write(diffr, T)
