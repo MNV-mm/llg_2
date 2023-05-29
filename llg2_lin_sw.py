@@ -80,9 +80,9 @@ def h_rest(m,p, e_f, dedz, phi, hd_s, kku, kkp, kkc, nu, np, at):
     e1, e2, e3 = split(e_f)
     dedz_1, dedz_2, dedz_3 = split(dedz)
     ## есть маг поле по y
-    vec = as_vector((p*(2*e1*m1.dx(0) + 2*e2*m2.dx(0) + 2*e3*m3.dx(0) + m1*e1.dx(0) + m2*e2.dx(0) + m3*e3.dx(0) + m1*e1.dx(0) + m2*e1.dx(1) + m3*dedz_1), \
-                     p*(2*e1*m1.dx(1) + 2*e2*m2.dx(1) + 2*e3*m3.dx(1) + m1*e1.dx(1) + m2*e2.dx(1) + m3*e3.dx(1) + m1*e2.dx(0) + m2*e2.dx(1) + m3*dedz_2), \
-                          p*(m1*e3.dx(0) + m2*e3.dx(1) + m3*dedz_3 + m1*dedz_1 + m2*dedz_2 + m3*dedz_3)))
+    vec = as_vector((-p*(2*e1*m1.dx(0) + 2*e2*m2.dx(0) + 2*e3*m3.dx(0) + m1*e1.dx(0) + m2*e2.dx(0) + m3*e3.dx(0) + m1*e1.dx(0) + m2*e1.dx(1) + m3*dedz_1), \
+                     -p*(2*e1*m1.dx(1) + 2*e2*m2.dx(1) + 2*e3*m3.dx(1) + m1*e1.dx(1) + m2*e2.dx(1) + m3*e3.dx(1) + m1*e2.dx(0) + m2*e2.dx(1) + m3*dedz_2), \
+                          -p*(m1*e3.dx(0) + m2*e3.dx(1) + m3*dedz_3 + m1*dedz_1 + m2*dedz_2 + m3*dedz_3)))
     oo = Constant(0)
     m1 = variable(m1)
     m2 = variable(m2)
@@ -128,9 +128,9 @@ def dot_v(m,mm,w,pp,e_f):
     mm1, mm2, mm3 = split(m)
     e1, e2, e3 = split(e_f)
     #w1, w2, w3 = split(w)
-    expr = dot(grad(cross(w,m)[0]),grad(mm1) - 2*pp*e1*to_2d(mm)) + \
-        dot(grad(cross(w,m)[1]),grad(mm2) - 2*pp*e2*to_2d(mm)) + \
-            dot(grad(cross(w,m)[2]),grad(mm3) - 2*pp*e3*to_2d(mm))
+    expr = dot(grad(cross(w,m)[0]),grad(mm1) + 2*pp*e1*to_2d(mm)) + \
+        dot(grad(cross(w,m)[1]),grad(mm2) + 2*pp*e2*to_2d(mm)) + \
+            dot(grad(cross(w,m)[2]),grad(mm3) + 2*pp*e3*to_2d(mm))
     return expr
 
 def dots_v(m,mm,w,pp,e_f):
@@ -655,7 +655,7 @@ tol = 1E-7
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 100
+N_f = 500
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -742,8 +742,8 @@ while j <= 10:
     mwrite(route_0 + 'results/avg_table.txt', data, 'a', rank)
     if i%2 == 0:
         m_file.write(m, T)
-        hd_v_file.write(phi, T)
-        diff_file.write(diffr, T)
+        #hd_v_file.write(phi, T)
+        #diff_file.write(diffr, T)
     T = T + dt    
     # vtkfile_m2 << m2
     # vtkfile_m3 << m3
