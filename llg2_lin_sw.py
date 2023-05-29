@@ -662,7 +662,7 @@ PI = Constant(math.pi)
 Hd_v_y = as_vector((oo, Constant(0.), oo)) #Constant(-26/2) on y axis
 #hd_s+hd_ext
 
-F = dot(w,(v-m)/Dt-al*cross(m,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(m,pp,e_f,dedz_v,M_s*M_s/2/kp*phi,M_s*M_s/2/kp*(hd_ext + Hd_v_y), ku, kp, kc, Nu, Np, at)))*dx - dot_v(m,v,w,pp,e_f)*dx
+F = dot(w,(v-m)/Dt-al*cross(m,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(m,pp,e_f,dedz_v,M_s*M_s/2/kp*phi,M_s*M_s/2/kp*(hd_ext + Hd_v_y), ku, kp, kc, Nu, Np, at)))*dx - dot_v(m,v,w,pp,e_f)*dx - dot(w,cross(m,dmdn(m,n)))*ds - 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
 
 a = lhs(F)
 L = rhs(F)
