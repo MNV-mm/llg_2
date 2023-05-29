@@ -177,7 +177,7 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 
 alpha1 = 0.0001 
-alpha2 = 10   #parameter alpha
+#alpha2 = 10   #parameter alpha
 UU0 = 2*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
@@ -341,9 +341,9 @@ ny = 200
 #SL_space, FS_1, FS_3, FS_3_1, FS
 
 El = VectorElement('CG', triangle, 1, dim=3)
-FS_0 = FunctionSpace(mesh_0, El, constrained_domain=pbc)
+FS_0 = FunctionSpace(mesh_0, El) #, constrained_domain=pbc
 
-FS = FunctionSpace(mesh, El, constrained_domain=pbc)
+FS = FunctionSpace(mesh, El) #, constrained_domain=pbc
 
 #El_1 = FiniteElement('CG', triangle, 1)
 #FS_1 = FunctionSpace(mesh, El_1)
@@ -648,14 +648,14 @@ phi = DD_Hd.pot(m, wall_type, beta, phi_0, m_b_2d, pbc)
 i = 0
 j = 0
 count = 0
-dt = 0.0005 #0.001
+dt = 0.0001 #0.001
 Dt = Constant(dt)
 T =  1
 tol = 1E-7
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 500
+N_f = 1000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -740,7 +740,7 @@ while j <= 10:
     #file_txt.write(data)
     #file_txt.close()
     mwrite(route_0 + 'results/avg_table.txt', data, 'a', rank)
-    if i%4 == 0:
+    if i%10 == 0:
         m_file.write(m, T)
         #hd_v_file.write(phi, T)
         #diff_file.write(diffr, T)
