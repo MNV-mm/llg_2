@@ -213,7 +213,7 @@ g = 10**(-6) # magnetoelectric constant
 # p = g*UU0/1e-4/(2*math.sqrt(AA*kk)/6)*0.1
 Hy = -30
 xx0 = 0
-yy0 = 2
+yy0 = 50
 #beta = 1.2#parameter beta
 #print(parameters.linear_algebra_backend)
 #list_linear_solver_methods()
