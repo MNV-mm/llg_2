@@ -536,7 +536,7 @@ def my_boundary(x, on_boundary):
     tol = 1E-16
     return (on_boundary and near(x[1],Ly/2,tol)) or (on_boundary and near(x[1],-Ly/2,tol))
 
-BC = DirichletBC(FS, ub, my_boundary)
+#BC = DirichletBC(FS, ub, my_boundary)
 # Define initial value
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
@@ -549,10 +549,12 @@ if in_type == 'old':
     phi_0 = Function(FS_1)
     hdf_m_old.read(phi_0, "/demag_pot")
     hdf_m_old.close()
+    BC = DirichletBC(FS, m, boundary)
 if in_type == 'new':
     m = project(ub,FS)
     #phi_0 = Function(FS_1)
     phi_0 = project(phi_nl, FS_1)
+    BC = DirichletBC(FS, ub, boundary)
 if in_type == 'rand':
     m = project(ub,FS)
     m = DD_Hd.rand_vec(m, 0.001)
