@@ -178,7 +178,7 @@ size = comm.Get_size()
 
 alpha1 = 0.0001 
 #alpha2 = 10   #parameter alpha
-UU0 = 3*2*10/3 #Voltage (CGS)
+UU0 = 10*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -213,7 +213,7 @@ g = 10**(-6) # magnetoelectric constant
 # p = g*UU0/1e-4/(2*math.sqrt(AA*kk)/6)*0.1
 Hy = -30
 xx0 = 0
-yy0 = 50
+yy0 = 10
 #beta = 1.2#parameter beta
 #print(parameters.linear_algebra_backend)
 #list_linear_solver_methods()
