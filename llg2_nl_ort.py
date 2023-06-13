@@ -178,7 +178,7 @@ size = comm.Get_size()
 
 alpha1 = 3 #2.5 #0.9 #0.1 #0.0001 
 alpha2 = 10   #parameter alpha
-UU0 = 2*10/3 #Voltage (CGS)
+UU0 = (2*10/3) #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -389,7 +389,7 @@ dEdz_array = dedz_v.vector().get_local()
 e_v.vector()[:] = E_array/E_max
 dedz_v.vector()[:] = dEdz_array/E_max
 
-p = g*UU0/math.sqrt(AA/kkp)/(2*math.sqrt(AA*kkp))*E_max
+p = g*UU0/math.sqrt(AA/kkp)/(2*math.sqrt(AA*kkp))*(2*E_max) # 2E_max = 0.01
 
 print("p = ", p)
 
@@ -630,7 +630,7 @@ tol = 1E-8
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 2 #100000
+N_f = 100 #100000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
