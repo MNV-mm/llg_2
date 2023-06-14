@@ -724,13 +724,13 @@ while j <= 10:
         j += 1
     i += 1
     
-    if (abs(delta_E/E) <= 5E-8):# and (delta_E < 0):
+    if (abs(delta_E/E) <= 5E-2):# and (delta_E < 0):
         count += 1
     else:
         count = 0
-    if count >= 10:
+    if count >= 3:
         count = 0
-        dt = round(dt + dt/2, 4) #0.05
+        dt = 2*dt #0.05
         Dt.assign(dt)
         print('NEW Time Step:', dt)
     
@@ -763,6 +763,7 @@ hdf_m.write(m, "/m_field")
 hdf_m.write(phi, "/demag_pot")
 hdf_m.close()
 print(i)
+print("dt = ", dt)
 # In[ ]:
 
 
