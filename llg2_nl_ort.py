@@ -630,7 +630,7 @@ tol = 1E-8
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 100 #100000
+N_f = 30 #100000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -724,11 +724,11 @@ while j <= 10:
         j += 1
     i += 1
     
-    if (abs(delta_E/E) <= 5E-2):# and (delta_E < 0):
+    if (abs(delta_E/E) <= 1E-2):# and (delta_E < 0):
         count += 1
     else:
         count = 0
-    if count >= 3:
+    if count >= 5:
         count = 0
         dt = 2*dt #0.05
         Dt.assign(dt)
@@ -742,6 +742,12 @@ while j <= 10:
     # U = u.vector()
     # m.vector()[:] = U
     m1, m2, m3 = m.split()
+    
+    hdf_m = HDF5File(mesh.mpi_comm(), route_0 + 'results/series_new/m_final.h5', 'w')
+    hdf_m.write(mesh, "/my_mesh")
+    hdf_m.write(m, "/m_field")
+    hdf_m.write(phi, "/demag_pot")
+    hdf_m.close()
     
 
 
