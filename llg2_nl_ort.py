@@ -630,7 +630,7 @@ tol = 1E-8
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 100 #100000
+N_f = 240 #100000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -728,7 +728,7 @@ while j <= 10:
         count += 1
     else:
         count = 0
-    if count >= 5:
+    if count >= 10:
         count = 0
         dt = 2*dt #0.05
         Dt.assign(dt)
