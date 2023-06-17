@@ -630,7 +630,7 @@ tol = 1E-8
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 240 #100000
+N_f = 120 #100000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -730,7 +730,7 @@ while j <= 10:
         count = 0
     if count >= 10:
         count = 0
-        dt = 2*dt #0.05
+        dt = 1*dt #0.05
         Dt.assign(dt)
         print('NEW Time Step:', dt)
     
