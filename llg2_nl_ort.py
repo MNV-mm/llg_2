@@ -312,7 +312,7 @@ mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 4*570, 4*200) # 1140,
 mesh_0 = Mesh(route_0 + 'MESH.xml')
 #mesh_0 = Mesh()
 
-hdf_E = HDF5File(mesh.mpi_comm(), route_0 + 'results/e_field/E_hdf_15_small.h5', 'r')
+hdf_E = HDF5File(mesh.mpi_comm(), route_0 + 'results/e_field/E_hdf_-15_small.h5', 'r')
 #hdf_E.read(mesh_0, "/my_mesh")
 
 # Sub domain for Periodic boundary condition
@@ -623,14 +623,14 @@ phi = DD_Hd.pot(m, wall_type, beta, phi_0, m_b_2d, pbc)
 i = 0
 j = 0
 count = 0
-dt = 2*0.64 #from previous launch
+dt = 0.001
 Dt = Constant(dt)
 T =  1
 tol = 1E-8
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 100 #100000
+N_f = 2 #100000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -728,9 +728,9 @@ while j <= 10:
         count += 1
     else:
         count = 0
-    if count >= 10:
+    if (count >= 10) and (dt <= 2):
         count = 0
-        dt = 1*dt #0.05
+        dt = 2*dt #0.05
         Dt.assign(dt)
         print('NEW Time Step:', dt)
     
