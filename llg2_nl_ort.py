@@ -728,7 +728,7 @@ while j <= 10:
         count += 1
     else:
         count = 0
-    if (count >= 10) and (dt <= 2):
+    if (count >= 10) and (dt <= 1):
         count = 0
         dt = 2*dt #0.05
         Dt.assign(dt)
