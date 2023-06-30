@@ -176,7 +176,7 @@ comm = MPI.comm_world
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-alpha1 = 0.9 #2*2*3  
+alpha1 = 3  
 alpha2 = 10   #parameter alpha
 UU0 = (2*2*10/3) #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
@@ -630,7 +630,7 @@ tol = 1E-8
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 30 #100000
+N_f = 100 #100000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -641,7 +641,7 @@ Hd_v_y = as_vector((oo, Constant(0.), oo)) #Constant(-26/2) on y axis
     #- (1-th)**2*dot_v(m,m,w,pp,e_f)*dx - (1-th)*th*dot_v(m,v,w,pp,e_f)*dx - (1-th)*th*dot_v(v,m,w,pp,e_f)*dx - th**2*dot_v(v,v,w,pp,e_f)*dx 
     # \
     #     + dot(w,cross(m_b,dmdn(m_b,n)))*ds + 2*pp*dot(w,cross(m_b,e_f))*dot(to_2d(m_b),n)*ds
-F = dot(w,(v-m)/Dt-al*cross(m,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/kp*phi,M_s*M_s/2/kp*(hd_ext + Hd_v_y), ku, kp, kc, Nu, Np, at)))*dx - dot_v(v,v,w,pp,e_f)*dx
+F = dot(w,(v-m)/Dt-al*cross(m,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/kp*phi,M_s*M_s/2/kp*(hd_ext + Hd_v_y), ku, kp, kc, Nu, Np, at)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
 Jac = derivative(F,v)
 diffr = Function(FS)
 Hd = Function(FS)
