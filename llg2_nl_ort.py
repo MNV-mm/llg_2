@@ -623,14 +623,14 @@ phi = DD_Hd.pot(m, wall_type, beta, phi_0, m_b_2d, pbc)
 i = 0
 j = 0
 count = 0
-dt = 0.064
+dt = 0.05
 Dt = Constant(dt)
 T =  1
 tol = 1E-8
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 2 #100000
+N_f = 20 #100000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -641,7 +641,7 @@ Hd_v_y = as_vector((oo, Constant(0.), oo)) #Constant(-26/2) on y axis
     #- (1-th)**2*dot_v(m,m,w,pp,e_f)*dx - (1-th)*th*dot_v(m,v,w,pp,e_f)*dx - (1-th)*th*dot_v(v,m,w,pp,e_f)*dx - th**2*dot_v(v,v,w,pp,e_f)*dx 
     # \
     #     + dot(w,cross(m_b,dmdn(m_b,n)))*ds + 2*pp*dot(w,cross(m_b,e_f))*dot(to_2d(m_b),n)*ds
-F = dot(w,(v-m)/Dt-al*cross(m,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/kp*phi,M_s*M_s/2/kp*(hd_ext + Hd_v_y), ku, kp, kc, Nu, Np, at)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
+F = dot(w,(v-m)/Dt-al*cross(v,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/kp*phi,M_s*M_s/2/kp*(hd_ext + Hd_v_y), ku, kp, kc, Nu, Np, at)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
 Jac = derivative(F,v)
 diffr = Function(FS)
 Hd = Function(FS)
@@ -664,7 +664,7 @@ while j <= 10:
         # + (1-th)**2*dot(w,cross(m,h_rest(m,pp,e_f)))*dx  + (1-th)*th*dot(w,cross(v,h_rest(m,pp,e_f)))*dx + (1-th)*th*dot(w,cross(m,h_rest(v,pp,e_f)))*dx + th**2*dot(w,cross(v,h_rest(v,pp,e_f)))*dx \
         #     - (1-th)**2*dot_v(m,m,w,pp,e_f)*dx - (1-th)*th*dot_v(m,v,w,pp,e_f)*dx - (1-th)*th*dot_v(v,m,w,pp,e_f)*dx - th**2*dot_v(v,v,w,pp,e_f)*dx \
         #         + 2*pp*dot(w,cross(m_b,e_f))*dot(to_2d(m_b),n)*ds
-    solve(F==0, v, J=Jac, solver_parameters = { "newton_solver": { "absolute_tolerance": 1e-12, "relative_tolerance": 1e-11}}) # BC!!!
+    solve(F==0, v, BC, J=Jac, solver_parameters = { "newton_solver": { "absolute_tolerance": 1e-12, "relative_tolerance": 1e-11}}) # BC!!!
     
     v = norm_sol_s(v, FS)
     V = v.vector()
