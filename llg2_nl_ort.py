@@ -623,14 +623,14 @@ phi = DD_Hd.pot(m, wall_type, beta, phi_0, m_b_2d, pbc)
 i = 0
 j = 0
 count = 0
-dt = 0.1
+dt = 0.8
 Dt = Constant(dt)
 T =  1
 tol = 1E-8
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 30 #100000
+N_f = 50 #100000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -730,8 +730,10 @@ while j <= 10:
         count = 0
     if (count >= 10) and (dt <= 1):
         count = 0
-        dt = 2*dt #0.05
+        dt = 1*dt #0.05
         Dt.assign(dt)
+        alpha1 = 2*alpha1
+        al.assign(alpha1)
         print('NEW Time Step:', dt)
     
     m.assign(v)
