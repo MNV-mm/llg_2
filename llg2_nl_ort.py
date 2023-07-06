@@ -389,7 +389,7 @@ dEdz_array = dedz_v.vector().get_local()
 e_v.vector()[:] = E_array/E_max
 dedz_v.vector()[:] = dEdz_array/E_max
 
-p = g*UU0/math.sqrt(AA/kkp)/(2*math.sqrt(AA*kkp))*(2*E_max) # 2E_max = 0.01
+p = g*UU0/math.sqrt(AA/kkp)/(2*math.sqrt(AA*kkp))*(E_max) # 2E_max = 0.01
 
 print("p = ", p)
 
@@ -630,7 +630,7 @@ tol = 1E-8
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 150 #100000
+N_f = 1 #100000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
