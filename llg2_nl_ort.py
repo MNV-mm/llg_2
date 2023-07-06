@@ -732,8 +732,8 @@ while j <= 10:
         count = 0
         dt = 1*dt #0.05
         Dt.assign(dt)
-        alpha1 = 2*alpha1
-        al.assign(alpha1)
+        #alpha1 = 2*alpha1
+        #al.assign(alpha1)
         print('NEW Time Step:', dt)
     
     m.assign(v)
