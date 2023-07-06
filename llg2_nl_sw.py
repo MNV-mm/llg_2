@@ -89,7 +89,8 @@ def h_rest(m,p, e_f, dedz, phi, hd_s, kku, kkp, kkc, nu, np, at):
     m3 = variable(m3)
     mm = as_vector((m1, m2, m3))
     m_cryst = dot(at,mm)
-    w_an = -kku*dot(mm,nu)**2 + kkp*dot(mm,np)**2 + kkc*(m_cryst[0]**2*m_cryst[1]**2 + m_cryst[0]**2*m_cryst[2]**2 + m_cryst[1]**2*m_cryst[2]**2)
+    #w_an = -kku*dot(mm,nu)**2 + kkp*dot(mm,np)**2 + kkc*(m_cryst[0]**2*m_cryst[1]**2 + m_cryst[0]**2*m_cryst[2]**2 + m_cryst[1]**2*m_cryst[2]**2)
+    w_an = -kkp*m3**2
     an_vec = as_vector((-diff(w_an,m1)/2/kkp, -diff(w_an,m2)/2/kkp, -diff(w_an,m3)/2/kkp))
     #g_vec = as_vector((grad(dot(m,e_f))[0],grad(dot(m,e_f))[1],oo))
     phi_vec = as_vector((-phi.dx(0), -phi.dx(1), oo))
@@ -178,7 +179,7 @@ size = comm.Get_size()
 
 alpha1 = 0.0001 
 #alpha2 = 10   #parameter alpha
-UU0 = 2*10*10/3 #Voltage (CGS)
+UU0 = 0*2*10*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -292,8 +293,8 @@ print('before aa_min')
 
 #aa_res = DD_Hd.aa_min(NNu, NNp, Mat_1, kku, kkp, kkc)
 #th_0, ph_0 = aa_res.x
-th_0 = 2.013269620451453
-ph_0 = 3.093092175684844
+th_0 = 0.0 #2.013269620451453
+ph_0 = 0.0 #3.093092175684844
 print(th_0)
 print(ph_0)
 
@@ -302,13 +303,13 @@ print(ph_0)
 
 
 # Create mesh and define function space
-Lx = 570 # 60 150 80
-Ly = 200 # 30 80 40
+Lx = 50 # 60 150 80
+Ly = 50 # 30 80 40
 #DD_Hd.pe_EF(5,30,1,Lx,Ly,'/home/mnv/Documents/python_doc/llg_nl/E_series')
 
 #FS_1, FS_3, FS_3_1, FS, e_v = DD_Hd.pe_EF(5,30,1,Lx,Ly)
 #mesh = FS.mesh()
-mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 4*570, 4*200) # 1140, 400
+mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 5*50, 5*50) # 1140, 400
 mesh_0 = Mesh(route_0 + 'MESH.xml')
 #mesh_0 = Mesh()
 
@@ -541,7 +542,7 @@ def my_boundary(x, on_boundary):
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
 
-in_type = 'old'
+in_type = 'new'
 if in_type == 'old':
     hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/m_final.h5', 'r')
     m = Function(FS)
