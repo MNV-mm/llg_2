@@ -360,7 +360,7 @@ def pe_EF(a,b,c,Lx,Ly,angle,file_str):
         return norm_prev
 
     ## BEM part
-    grid = bempp.api.shapes.cuboid(length=(2*a, 2*b, 2*c), origin=(-a, -b, 12+0.5), h=3.0)
+    grid = bempp.api.shapes.cuboid(length=(2*a, 2*b, 2*c), origin=(-a, -b, 12.5+0.5), h=3.0)
     coord = grid.vertices
     angle = math.pi/180*angle
     mat = np.array([[math.cos(angle), math.sin(angle), 0],
