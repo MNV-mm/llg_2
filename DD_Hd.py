@@ -360,7 +360,7 @@ def pe_EF(a,b,c,Lx,Ly,angle,file_str):
         return norm_prev
 
     ## BEM part
-    grid = bempp.api.shapes.cuboid(length=(2*a, 2*b, 2*c), origin=(-a, -b, 45+0.5), h=3.0)
+    grid = bempp.api.shapes.cuboid(length=(2*a, 2*b, 2*c), origin=(-a, -b, 15+0.5), h=3.0)
     coord = grid.vertices
     angle = math.pi/180*angle
     mat = np.array([[math.cos(angle), math.sin(angle), 0],
@@ -526,13 +526,13 @@ def pe_EF(a,b,c,Lx,Ly,angle,file_str):
     
     print("E_max = ", max_norm(e_v))
     
-    E_series = TimeSeries(file_str+'E_mid_-15_small')
-    dEdz_series = TimeSeries(file_str+'E_mid_-15_small_dEdz')
+    E_series = TimeSeries(file_str+'E_mid_-15_big')
+    dEdz_series = TimeSeries(file_str+'E_mid_-15_big_dEdz')
     
     E_series.store(e_v.vector(),0)
     dEdz_series.store(dEdz_v.vector(),0)
     
-    hdf_E = HDF5File(mesh_2.mpi_comm(), file_str + "E_hdf_-15_small.h5", 'w')
+    hdf_E = HDF5File(mesh_2.mpi_comm(), file_str + "E_hdf_-15_big.h5", 'w')
     hdf_E.write(mesh_2, "/my_mesh")
     hdf_E.write(e_v, "/e_field")
     hdf_E.write(dEdz_v, "/dedz_field")
