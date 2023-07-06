@@ -17,4 +17,4 @@ route_0 = '/home/mnv/llg_nl/'
 #hd_ext_expr = funcs_2.n_pair(Ly, 30, 10, 9, 3)
 #hd = dp.Expression(hd_ext_expr, degree = 3)
 
-DD_Hd.pe_EF(45,200,1,Lx,Ly,-15, route_0 + 'results/e_field/')
+DD_Hd.pe_EF(90,200,1,Lx,Ly,-15, route_0 + 'results/e_field/')
