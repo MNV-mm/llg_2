@@ -735,6 +735,7 @@ while j <= 10:
         alpha1 = 2*alpha1
         al.assign(alpha1)
         print('NEW Time Step:', dt)
+        print('NEW Dump:', alpha1)
     
     m.assign(v)
     phi_n = DD_Hd.pot(m, wall_type, beta, phi, m_b_2d, pbc)
