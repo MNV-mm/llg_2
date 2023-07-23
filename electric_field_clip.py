@@ -35,8 +35,8 @@ def pe_EF(a,b,c,Lx,Ly,Lz,angle):
     p1 = Point(-Lx/2,-Ly/2,-Lz) #matrix : cos(a)  sin(a)
     p2 = Point(Lx/2,Ly/2,0)    #         -sin(a) cos(a)
     nx = 100
-    ny = 20
-    nz = 100
+    ny = 10
+    nz = 60
     mesh = BoxMesh(p1,p2,nx,ny,nz)
     #coord_T = np.transpose(mesh.coordinates())
     
