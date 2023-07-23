@@ -68,9 +68,17 @@ def pe_EF(a,b,c,Lx,Ly,Lz,angle):
     
     #e_v = project(as_vector((E1,E2,E3)), FS_3)
     
-    e_file =  XDMFFile('/home/mnv/llg_nl/electric_field_clip/e.xdmf')
-    e_file.write(e_v)
-    e_file.close()
+    e1_file =  XDMFFile('/home/mnv/llg_nl/electric_field_clip/e1.xdmf')
+    e1_file.write(E1)
+    e1_file.close()
+
+    e2_file =  XDMFFile('/home/mnv/llg_nl/electric_field_clip/e2.xdmf')
+    e2_file.write(E2)
+    e2_file.close()
+
+    e3_file =  XDMFFile('/home/mnv/llg_nl/electric_field_clip/e3.xdmf')
+    e3_file.write(E3)
+    e3_file.close()
     
     return 0 #[FS2, FS, FS_1, FS_3, e_v]
 a = 90
