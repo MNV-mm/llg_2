@@ -82,9 +82,9 @@ def pe_EF(a,b,c,Lx,Ly,Lz,angle):
     
     return 0 #[FS2, FS, FS_1, FS_3, e_v]
 a = 90
-b = 400
+b = 200
 c = 1
-Lx = 200
+Lx = 400
 Ly = 20
 Lz = 180
 angle = 0
