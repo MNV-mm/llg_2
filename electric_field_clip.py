@@ -63,7 +63,7 @@ def pe_EF(a,b,c,Lx,Ly,Lz,angle):
     E2 = project(-grad(u)[1],FS_1)
     E3 = project(-grad(u)[2],FS_1)
     
-    El_3 = VectorElement('CG', triangle, 1, dim=3)
+    El_3 = VectorElement('CG', tetrahedron, 1, dim=3)
     FS_3 = FunctionSpace(mesh, El_3)
     
     e_v = project(as_vector((E1,E2,E3)), FS_3)
