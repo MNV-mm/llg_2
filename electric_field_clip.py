@@ -90,6 +90,6 @@ b = 200
 c = 1
 Lx = 300
 Ly = 3
-Lz = 180
+Lz = 90
 angle = 0
 pe_EF(a,b,c,Lx,Ly,Lz,angle)
