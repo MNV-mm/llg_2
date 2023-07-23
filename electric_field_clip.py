@@ -24,7 +24,7 @@ def pe_EF(a,b,c,Lx,Ly,Lz,angle):
     op = bempp.api.operators.boundary.laplace.single_layer(space, space, space)
 
     sol, _, iteration_count = bempp.api.linalg.gmres(op, rhs, tol = 1e-6, use_strong_form=True, return_iteration_count=True)
-    bempp.api.export('/media/mnv/SSD_1/pics_temp/electric_field/surf_func.vtu', grid_function=sol)
+    bempp.api.export('/home/mnv/llg_nl/electric_field_clip/surf_func.vtu', grid_function=sol)
     
     print("Number of iterations: {0}".format(iteration_count))
     
@@ -68,7 +68,7 @@ def pe_EF(a,b,c,Lx,Ly,Lz,angle):
     
     e_v = project(as_vector((E1,E2,E3)), FS_3)
     
-    e_file =  XDMFFile("/media/mnv/SSD_1/pics_temp/electric_field/e.xdmf")
+    e_file =  XDMFFile('/home/mnv/llg_nl/electric_field_clip/e.xdmf')
     e_file.write(e_v)
     e_file.close()
     
