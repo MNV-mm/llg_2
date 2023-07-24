@@ -75,20 +75,20 @@ def pe_EF(a,b,c,Lx,Ly,Lz,angle):
     u.vector()[:] = res[0]
     #vtkfile_m = File('pot.pvd')
     
-    #El_1 = FiniteElement('CG', tetrahedron, 1)
-    #FS_1 = FunctionSpace(mesh, El_1)
+    El_1 = FiniteElement('CG', tetrahedron, 1)
+    FS_1 = FunctionSpace(mesh, El_1)
     
     #d2v = dof_to_vertex_map(FS_1)
     #v2d = vertex_to_dof_map(FS_1)
     
-    #E1 = project(-grad(u)[0],FS_1)
-    #E2 = project(-grad(u)[1],FS_1)
-    #E3 = project(-grad(u)[2],FS_1)
+    E1 = project(-grad(u)[0],FS_1)
+    E2 = project(-grad(u)[1],FS_1)
+    E3 = project(-grad(u)[2],FS_1)
     
-    El_3 = VectorElement('CG', tetrahedron, 1, dim=3)
-    FS_3 = FunctionSpace(mesh, El_3)
+    #El_3 = VectorElement('CG', tetrahedron, 1, dim=3)
+    #FS_3 = FunctionSpace(mesh, El_3)
     
-    e_v = project(-grad(u), FS_3)
+    #e_v = project(-grad(u), FS_3)
 
     """
     E_array = e_v.vector().get_local()
@@ -99,21 +99,21 @@ def pe_EF(a,b,c,Lx,Ly,Lz,angle):
     e_v.vector()[:] = E_array/E_max
     """
     
-    #e1_file =  XDMFFile('/home/mnv/llg_nl/electric_field_clip/e1.xdmf')
-    #e1_file.write(E1)
-    #e1_file.close()
+    e1_file =  XDMFFile('/home/mnv/llg_nl/electric_field_clip/e1.xdmf')
+    e1_file.write(E1)
+    e1_file.close()
 
-    #e2_file =  XDMFFile('/home/mnv/llg_nl/electric_field_clip/e2.xdmf')
-    #e2_file.write(E2)
-    #e2_file.close()
+    e2_file =  XDMFFile('/home/mnv/llg_nl/electric_field_clip/e2.xdmf')
+    e2_file.write(E2)
+    e2_file.close()
 
-    #e3_file =  XDMFFile('/home/mnv/llg_nl/electric_field_clip/e3.xdmf')
-    #e3_file.write(E3)
-    #e3_file.close()
+    e3_file =  XDMFFile('/home/mnv/llg_nl/electric_field_clip/e3.xdmf')
+    e3_file.write(E3)
+    e3_file.close()
 
-    e_file =  XDMFFile('/home/mnv/llg_nl/electric_field_clip/e.xdmf')
-    e_file.write(e_v)
-    e_file.close()
+    #e_file =  XDMFFile('/home/mnv/llg_nl/electric_field_clip/e.xdmf')
+    #e_file.write(e_v)
+    #e_file.close()
     
     return 0 #[FS2, FS, FS_1, FS_3, e_v]
 a = 90
