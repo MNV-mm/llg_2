@@ -2,6 +2,28 @@ import bempp.api
 import numpy as np
 import math
 from fenics import *
+def max_norm(u):
+    '''
+    FS = u.function_space()
+    u_array = u.vector().get_local()
+    N = int(np.size(u_array))
+    v2d = vertex_to_dof_map(FS)
+    d2v = dof_to_vertex_map(FS)
+    u_array_2 = u_array[v2d]
+    i = 0
+    norm_prev = 0
+    while i+2 < N:
+        norm = math.sqrt(math.pow(u_array_2[i],2) + math.pow(u_array_2[i+1],2) + math.pow(u_array_2[i+2],2))
+        if norm > norm_prev:
+            norm_prev = norm
+        i += 3
+    '''
+    u1, u2, u3 = u.split()
+    V1 = u1.compute_vertex_values()
+    V2 = u2.compute_vertex_values()
+    V3 = u3.compute_vertex_values()
+    norm_prev = np.max(np.sqrt(V1*V1 + V2*V2 + V3*V3))
+    return norm_prev
 def pe_EF(a,b,c,Lx,Ly,Lz,angle):
     ## BEM part
     grid = bempp.api.shapes.cuboid(length=(2*a, 2*b, 2*c), origin=(-a, -b, -c), h=3)
