@@ -67,6 +67,13 @@ def pe_EF(a,b,c,Lx,Ly,Lz,angle):
     FS_3 = FunctionSpace(mesh, El_3)
     
     e_v = project(-grad(u), FS_3)
+
+    E_array = e_v.vector().get_local()
+    E_max = max_norm(e_v)
+
+    print("E_max = ", E_max)
+
+    e_v.vector()[:] = E_array/E_max
     
     #e1_file =  XDMFFile('/home/mnv/llg_nl/electric_field_clip/e1.xdmf')
     #e1_file.write(E1)
