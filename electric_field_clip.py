@@ -55,7 +55,7 @@ def pe_EF(a,b,c,Lx,Ly,Lz,angle):
     # Ly = 15
     #z_max = 0.5
     p1 = Point(-Lx/2,-Ly/2,-Lz) #matrix : cos(a)  sin(a)
-    p2 = Point(Lx/2,Ly/2,-3)    #         -sin(a) cos(a)
+    p2 = Point(Lx/2,Ly/2,-10)    #         -sin(a) cos(a)
     nx = 500#300
     ny = 2
     nz = 200#50
@@ -121,6 +121,6 @@ b = 200
 c = 1
 Lx = 300
 Ly = 3
-Lz = 10
+Lz = 90
 angle = 0
 pe_EF(a,b,c,Lx,Ly,Lz,angle)
