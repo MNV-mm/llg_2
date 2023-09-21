@@ -293,8 +293,8 @@ print('before aa_min')
 
 #aa_res = DD_Hd.aa_min(NNu, NNp, Mat_1, kku, kkp, kkc)
 #th_0, ph_0 = aa_res.x
-th_0 = 0.0 #2.013269620451453
-ph_0 = 0.0 #3.093092175684844
+th_0 = 2.4620373759433924 #2.013269620451453
+ph_0 = 3.078401676352299 #3.093092175684844
 print(th_0)
 print(ph_0)
 
