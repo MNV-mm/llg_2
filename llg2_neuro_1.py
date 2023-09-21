@@ -694,6 +694,10 @@ e_file =  XDMFFile(route_0 + 'results/graphs/e_file.xdmf')
 e_file.write(e_f)
 e_file.close()
 
+ku_file =  XDMFFile(route_0 + 'results/graphs/ku_file.xdmf')
+ku_file.write(ku)
+ku_file.close()
+
 dedz_file =  XDMFFile(route_0 + 'results/graphs/dedz_file.xdmf')
 dedz_file.write(dedz_v)
 dedz_file.close()
