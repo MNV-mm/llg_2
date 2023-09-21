@@ -751,13 +751,6 @@ while j <= 10:
         #         + 2*pp*dot(w,cross(m_b,e_f))*dot(to_2d(m_b),n)*ds
     solve(F==0, v, BC, J=Jac, solver_parameters = { "newton_solver": { "absolute_tolerance": 1e-12, "relative_tolerance": 1e-11}}) # BC!!!
     
-    v = Function(FS)
-    v.vector()[:] = m.vector()
-    V = v.vector()
-    
-    solver.solve(A, V, b)
-    v.vector()[:] = V
-    
     v = norm_sol_s(v, FS)
     V = v.vector()
     M = m.vector()
