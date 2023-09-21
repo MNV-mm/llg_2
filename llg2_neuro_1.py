@@ -392,7 +392,7 @@ ny = 200
 #SL_space, FS_1, FS_3, FS_3_1, FS
 
 El = VectorElement('CG', triangle, 1, dim=3)
-FS_0 = FunctionSpace(mesh_0, El) #, constrained_domain=pbc
+#FS_0 = FunctionSpace(mesh_0, El) #, constrained_domain=pbc
 
 FS = FunctionSpace(mesh, El) #, constrained_domain=pbc
 
