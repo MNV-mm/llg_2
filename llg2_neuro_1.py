@@ -479,19 +479,19 @@ for i in range(1,3,1):
     f_expr = f_expr + U0*r0/sp.sqrt((r0-z)**2+((x-x0 - per*i)**2 + (y-y0)**2))
 
 E1 = -sp.diff(f_expr,x)
-E1 = (E1.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy),(per,period)])/U0*r0)
+E1 = (E1.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy)])/U0*r0)
 dE1_dz = sp.diff(E1,z)
 E1 = E1.subs([(z,0)])
 dE1_dz = dE1_dz.subs([(z,0)])
 
 E2 = -sp.diff(f_expr,y)
-E2 = (E2.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy),(per,period)])/U0*r0)
+E2 = (E2.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy)])/U0*r0)
 dE2_dz = sp.diff(E2,z)
 E2 = E2.subs([(z,0)])
 dE2_dz = dE2_dz.subs([(z,0)])
 
 E3 = -sp.diff(f_expr,z)
-E3 = (E3.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy),(per,period)])/U0*r0)
+E3 = (E3.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy)])/U0*r0)
 dE3_dz = sp.diff(E3,z)
 E3 = E3.subs([(z,0)])
 dE3_dz = dE3_dz.subs([(z,0)])
@@ -571,12 +571,12 @@ Hy_expr = Expression("-(5.5 + 0.00000002*(pow(x[1],6) + 300000*pow(x[1],2)))", d
 # Define electric field
 electrode_type = 'circle' # 'plane'
 if electrode_type == 'circle':
-    e1 = Expression((E1_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a)   
-    e2 = Expression((E2_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a)
-    e3 = Expression((E3_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a)
-    e_v = Expression((E1_c, E2_c, E3_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a)
+    e1 = Expression((E1_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)   
+    e2 = Expression((E2_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)
+    e3 = Expression((E3_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)
+    e_v = Expression((E1_c, E2_c, E3_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)
     e_v = project(e_v, FS)
-    dedz_v = Expression((dE1_dz_c, dE2_dz_c, dE3_dz_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a)
+    dedz_v = Expression((dE1_dz_c, dE2_dz_c, dE3_dz_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)
     dedz_v = project(dedz_v, FS)
     p = g*UU0/rr0/(2*math.sqrt(AA*kkp))
     print("p=", p)
