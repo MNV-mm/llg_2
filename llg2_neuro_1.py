@@ -360,8 +360,8 @@ class KuClass(UserExpression):
             else:
                 values[0] = self.ku_1
 
-Ku_exp = KuClass(materials, kku, kku, degree = 0)
-Kp_exp = KuClass(materials, kkp, kkp, degree = 0)
+Ku_exp = KuClass(materials, kku, 1.1*kku, degree = 4)
+Kp_exp = KuClass(materials, kkp, 1.1*kkp, degree = 4)
 
 #hdf_E = HDF5File(mesh.mpi_comm(), route_0 + 'results/e_field/E_hdf_20.h5', 'r')
 #hdf_E.read(mesh_0, "/my_mesh")
