@@ -177,22 +177,22 @@ comm = MPI.comm_world
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-alpha1 = 0.0001 
+alpha1 = 1. 
 #alpha2 = 10   #parameter alpha
 UU0 = 0*2*10*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
-# kku = 852.9 # erg/cm**3 - unaxial anisotropy constant
-# kkp = 2440 # erg/cm**3 - rombic anisotropy constant
-# kkc = -1*1275 # cubic anisotropy constant
-#M_s = 4.26
+kku = 852.9 # erg/cm**3 - unaxial anisotropy constant
+kkp = 2440 # erg/cm**3 - rombic anisotropy constant
+kkc = -1*1275 # cubic anisotropy constant
+M_s = 4.26
 
 # Образец 30
-kku = -312 # erg/cm**3 - unaxial anisotropy constant
-kkp = 3338 # erg/cm**3 - rombic anisotropy constant
-kkc = -1*1555 # cubic anisotropy constant
-M_s = 4.95
+#kku = -312 # erg/cm**3 - unaxial anisotropy constant
+#kkp = 3338 # erg/cm**3 - rombic anisotropy constant
+#kkc = -1*1555 # cubic anisotropy constant
+#M_s = 4.95
 
 # Образец 32
 # kku = 1054 # erg/cm**3 - unaxial anisotropy constant
@@ -221,21 +221,21 @@ yy0 = 10
 
 # In[anisotropy]
 # # Образец 27
-# tu = 40/180*math.pi
-# psu = 189.4/180*math.pi
-# psp = 9.44/180*math.pi
+tu = 40/180*math.pi
+psu = 189.4/180*math.pi
+psp = 9.44/180*math.pi
 
 # Образец 30
-tu = 50.2/180*math.pi
-psu = -203/180*math.pi
-psp = -185/180*math.pi
+#tu = 50.2/180*math.pi
+#psu = -203/180*math.pi
+#psp = -185/180*math.pi
 
 # Образец 32
 # tu = 46.2/180*math.pi
 # psu = -16.7/180*math.pi
 # psp = 9.7/180*math.pi
 
-betta_deg = 90 + 32 #(учтено, что здесь нормаль к плоскости стенки направлена вдоль оси Оy)
+betta_deg = 90 + 52.5 #(учтено, что здесь нормаль к плоскости стенки направлена вдоль оси Оy)
 betta = betta_deg/180*np.pi
 
 Nu = as_vector((sin(tu)*cos(psu), sin(tu)*sin(psu), cos(tu)))
@@ -305,13 +305,63 @@ print(ph_0)
 # Create mesh and define function space
 Lx = 50 # 60 150 80
 Ly = 50 # 30 80 40
-#DD_Hd.pe_EF(5,30,1,Lx,Ly,'/home/mnv/Documents/python_doc/llg_nl/E_series')
 
-#FS_1, FS_3, FS_3_1, FS, e_v = DD_Hd.pe_EF(5,30,1,Lx,Ly)
-#mesh = FS.mesh()
+"""
+parameters for subdomains with high anisotropy
+these subdomains have the form of a square
+"""
+# coordinates for middle point of first square
+x_a = -20
+y_a = 10
+# width and height
+delta_x = 5
+delta_y = 5
+# period for following squares
+period = 10
+
 mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 5*50, 5*50) # 1140, 400
-mesh_0 = Mesh(route_0 + 'MESH.xml')
-#mesh_0 = Mesh()
+#mesh_0 = Mesh(route_0 + 'MESH.xml')
+
+"""
+Define some classes for subdomains
+"""
+tol = 1E-14
+class Omega_0(SubDomain):
+    def inside(self, x, on_boundary):
+        return (np.abs(x[0] - x_a) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
+
+class Omega_1(SubDomain):
+    def inside(self, x, on_boundary):
+        return (np.abs(x[0] - x_a - period) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
+
+class Omega_2(SubDomain):
+    def inside(self, x, on_boundary):
+        return (np.abs(x[0] - x_a - 2*period) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
+    
+materials = MeshFunction('size_t', mesh, dim = 2)    
+
+subdomain_0 = Omega_0()
+subdomain_1 = Omega_1()
+subdomain_2 = Omega_2()
+subdomain_0.mark(materials, 1)
+subdomain_1.mark(materials, 1)
+subdomain_2.mark(materials, 1)
+
+class KuClass(UserExpression):
+    def __init__(self, materials, ku_0, ku_1, **kwargs):
+        super().__init__(**kwargs)
+        self.materials = materials
+        self.ku_0 = ku_0
+        self.ku_1 = ku_1
+        
+    def eval_cell(self, values, x, cell):
+            if self.materials[cell.index] == 0:
+                values[0] = self.ku_0
+            else:
+                values[0] = self.ku_1
+
+Ku_exp = KuClass(materials, kku, 1.1*kku, degree = 0)
+Kp_exp = KuClass(materials, kkp, 1.1*kkp, degree = 0)
 
 #hdf_E = HDF5File(mesh.mpi_comm(), route_0 + 'results/e_field/E_hdf_20.h5', 'r')
 #hdf_E.read(mesh_0, "/my_mesh")
@@ -397,9 +447,9 @@ FS = FunctionSpace(mesh, El) #, constrained_domain=pbc
 #dedz_1, dedz_2, dedz_3 = split(dedz_v)
 
 #El = VectorElement('CG', triangle, 1, dim=3)
-El1 = FiniteElement('CG', triangle, 1)
+El_1 = FiniteElement('CG', triangle, 1)
 #FS = FunctionSpace(mesh, El)
-FS_1 = FunctionSpace(mesh,El1)
+FS_1 = FunctionSpace(mesh,El_1)
 # dy = 5
 # R0 = 10
 # s_s = 0.05 #0.1
@@ -420,24 +470,28 @@ w = TestFunction(FS)
 # In[] # Symbolic expressions
 x, y, z = sp.symbols('x y z')
 xx, yy = sp.symbols('x[0] x[1]')
-x0, y0 = sp.symbols('x0 y0')
+x0, y0, per = sp.symbols('x0 y0 per')
 d, r0, U0 = sp.symbols('d r0 U0')
 
 f_expr = U0*r0/sp.sqrt((r0-z)**2+((x-x0)**2 + (y-y0)**2))
+
+for i in range(1,3,1):
+    f_expr = f_expr + U0*r0/sp.sqrt((r0-z)**2+((x-x0 - per*i)**2 + (y-y0)**2))
+
 E1 = -sp.diff(f_expr,x)
-E1 = sp.simplify(E1.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy)])/U0*r0)
+E1 = (E1.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy),(per,period)])/U0*r0)
 dE1_dz = sp.diff(E1,z)
 E1 = E1.subs([(z,0)])
 dE1_dz = dE1_dz.subs([(z,0)])
 
 E2 = -sp.diff(f_expr,y)
-E2 = sp.simplify(E2.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy)])/U0*r0)
+E2 = (E2.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy),(per,period)])/U0*r0)
 dE2_dz = sp.diff(E2,z)
 E2 = E2.subs([(z,0)])
 dE2_dz = dE2_dz.subs([(z,0)])
 
 E3 = -sp.diff(f_expr,z)
-E3 = sp.simplify(E3.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy)])/U0*r0)
+E3 = (E3.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy),(per,period)])/U0*r0)
 dE3_dz = sp.diff(E3,z)
 E3 = E3.subs([(z,0)])
 dE3_dz = dE3_dz.subs([(z,0)])
@@ -517,12 +571,12 @@ Hy_expr = Expression("-(5.5 + 0.00000002*(pow(x[1],6) + 300000*pow(x[1],2)))", d
 # Define electric field
 electrode_type = 'circle' # 'plane'
 if electrode_type == 'circle':
-    e1 = Expression((E1_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = xx0, y0 = yy0)   
-    e2 = Expression((E2_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = xx0, y0 = yy0)
-    e3 = Expression((E3_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = xx0, y0 = yy0)
-    e_v = Expression((E1_c, E2_c, E3_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = xx0, y0 = yy0)
+    e1 = Expression((E1_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a)   
+    e2 = Expression((E2_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a)
+    e3 = Expression((E3_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a)
+    e_v = Expression((E1_c, E2_c, E3_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a)
     e_v = project(e_v, FS)
-    dedz_v = Expression((dE1_dz_c, dE2_dz_c, dE3_dz_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = xx0, y0 = yy0)
+    dedz_v = Expression((dE1_dz_c, dE2_dz_c, dE3_dz_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a)
     dedz_v = project(dedz_v, FS)
     p = g*UU0/rr0/(2*math.sqrt(AA*kkp))
     print("p=", p)
@@ -620,8 +674,10 @@ al = Constant(alpha1)
 # tol = 1E-14
 # al = Expression('(x[0] <= -65 + tol) || (x[0]>=65+tol) || (x[1]<=-30+tol) || (x[1]>=30+tol)? alpha2:alpha1', degree = 0, tol = tol, alpha2 = alpha2, alpha1 = alpha1)
 pp = Constant(p)#p
-ku = Constant(kku)
-kp = Constant(kkp)
+#ku = Constant(kku)
+ku = ptoject(Ku_exp, FS_1)
+#kp = Constant(kkp)
+kp = ptoject(Kp_exp, FS_1)
 kc = Constant(kkc)
 Ms = Constant(M_s)
 hy = project(Hy_expr,FS_1)
