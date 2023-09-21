@@ -475,8 +475,8 @@ d, r0, U0 = sp.symbols('d r0 U0')
 
 f_expr = U0*r0/sp.sqrt((r0-z)**2+((x-x0)**2 + (y-y0)**2))
 
-for i in range(1,3,1):
-    f_expr = f_expr + U0*r0/sp.sqrt((r0-z)**2+((x-x0 - per*i)**2 + (y-y0)**2))
+#for i in range(1,3,1):
+ #   f_expr = f_expr + U0*r0/sp.sqrt((r0-z)**2+((x-x0 - per*i)**2 + (y-y0)**2))
 
 E1 = -sp.diff(f_expr,x)
 E1 = (E1.subs([(x,d*x),(y,d*y),(z,d*z),(x0,d*x0),(y0,d*y0),(x,xx),(y,yy)])/U0*r0)
