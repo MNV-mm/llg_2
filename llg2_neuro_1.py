@@ -303,21 +303,21 @@ print(ph_0)
 
 
 # Create mesh and define function space
-Lx = 50 # 60 150 80
-Ly = 50 # 30 80 40
+Lx = 60 # 60 150 80
+Ly = 60 # 30 80 40
 
 """
 parameters for subdomains with high anisotropy
 these subdomains have the form of a square
 """
 # coordinates for middle point of first square
-x_a = -20
+x_a = -15
 y_a = 10
 # width and height
 delta_x = 5
 delta_y = 5
 # period for following squares
-period = 10
+period = 15
 
 mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 5*50, 5*50) # 1140, 400
 #mesh_0 = Mesh(route_0 + 'MESH.xml')
@@ -609,7 +609,7 @@ if in_type == 'new':
     m = project(ub,FS)
     #phi_0 = Function(FS_1)
     phi_0 = project(phi_nl, FS_1)
-    BC = DirichletBC(FS, ub, boundary)
+    BC = DirichletBC(FS, ub, my_boundary)
 if in_type == 'rand':
     m = project(ub,FS)
     m = DD_Hd.rand_vec(m, 0.001)
@@ -711,14 +711,14 @@ phi = DD_Hd.pot(m, wall_type, beta, phi_0, m_b_2d, pbc)
 i = 0
 j = 0
 count = 0
-dt = 0.01 #0.001
+dt = 0.001 #0.001
 Dt = Constant(dt)
 T =  1
 tol = 1E-7
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 50
+N_f = 200
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -787,7 +787,7 @@ while j <= 10:
     #file_txt.write(data)
     #file_txt.close()
     mwrite(route_0 + 'results/avg_table.txt', data, 'a', rank)
-    if i%100 == 0:
+    if i%10 == 0:
         m_file.write(m, T)
         #hd_v_file.write(phi, T)
         #diff_file.write(diffr, T)
