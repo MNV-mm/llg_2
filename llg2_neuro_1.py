@@ -93,7 +93,7 @@ def h_rest(m,p, e_f, dedz, phi, hd_s, kku, kkp, kkc, nu, np, at):
     w_an = -kkp*m3**2
     an_vec = as_vector((-diff(w_an,m1)/2/kkp, -diff(w_an,m2)/2/kkp, -diff(w_an,m3)/2/kkp))
     #g_vec = as_vector((grad(dot(m,e_f))[0],grad(dot(m,e_f))[1],oo))
-    phi_vec = as_vector((-phi.dx(0), -phi.dx(1), oo))
+    phi_vec = as_vector((-0.5*phi.dx(0), -0.5*phi.dx(1), oo))
     return vec + an_vec + phi_vec #+ hd_s
 
 def hs_rest(m,p,e_f,phi):
@@ -177,9 +177,9 @@ comm = MPI.comm_world
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-alpha1 = 1. 
+alpha1 = 4. 
 #alpha2 = 10   #parameter alpha
-UU0 = 0*2*10*10/3 #Voltage (CGS)
+UU0 = 1E-3*0*2*10*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -204,7 +204,7 @@ route_0 = '/home/mnv/llg_nl/'
 
 theta_0 = 0*math.pi/4
 
-rr0 = 0.0005 # cm - effective electrode radius
+rr0 = 0.0000005 # cm - effective electrode radius
 dd = math.sqrt(AA/kkp)# characteristic domain wall width
 beta = math.sqrt(1+2*math.pi*M_s**2/kku)
 #beta_n = math.sqrt(1-(kkp-2*math.pi*M_s**2)/kku)
@@ -362,6 +362,7 @@ class KuClass(UserExpression):
 
 Ku_exp = KuClass(materials, kku, 1.1*kku, degree = 4)
 Kp_exp = KuClass(materials, kkp, 1.1*kkp, degree = 4)
+Kc_exp = KuClass(materials, kkc, 1.1*kkc, degree = 4)
 
 #hdf_E = HDF5File(mesh.mpi_comm(), route_0 + 'results/e_field/E_hdf_20.h5', 'r')
 #hdf_E.read(mesh_0, "/my_mesh")
@@ -678,7 +679,8 @@ pp = Constant(p)#p
 ku = project(Ku_exp, FS_1)
 #kp = Constant(kkp)
 kp = project(Kp_exp, FS_1)
-kc = Constant(kkc)
+#kc = Constant(kkc)
+kc = project(Kc_exp, FS_1)
 Ms = Constant(M_s)
 hy = project(Hy_expr,FS_1)
 
@@ -718,7 +720,7 @@ tol = 1E-7
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 200
+N_f = 1000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -787,7 +789,7 @@ while j <= 10:
     #file_txt.write(data)
     #file_txt.close()
     mwrite(route_0 + 'results/avg_table.txt', data, 'a', rank)
-    if i%10 == 0:
+    if i%20 == 0:
         m_file.write(m, T)
         #hd_v_file.write(phi, T)
         #diff_file.write(diffr, T)
