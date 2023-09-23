@@ -713,7 +713,7 @@ phi = DD_Hd.pot(m, wall_type, beta, phi_0, m_b_2d, pbc)
 i = 0
 j = 0
 count = 0
-dt = 8*0.01 #0.001
+dt = 1.28 #0.001
 Dt = Constant(dt)
 T =  1
 tol = 1E-7
@@ -815,11 +815,11 @@ while j <= 10:
         count += 1
     else:
         count = 0
-    if (count >= 10) and (dt <= 2):
+    if (count >= 10) and (2*dt <= 20):
         count = 0
-        dt = round(2*dt, 4) #0.05
+        dt = round(1*dt, 4) #0.05
         Dt.assign(dt)
-        alpha1 = 1*alpha1
+        alpha1 = 2*alpha1
         al.assign(alpha1)
         print('NEW Time Step:', dt)
         print('NEW Dump:', alpha1)
