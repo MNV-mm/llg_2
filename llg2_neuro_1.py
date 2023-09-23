@@ -815,11 +815,11 @@ while j <= 10:
         count += 1
     else:
         count = 0
-    if count >= 10:
+    if (count >= 10) and (dt <= 2):
         count = 0
         dt = round(2*dt, 4) #0.05
         Dt.assign(dt)
-        alpha1 = 2*alpha1
+        alpha1 = 1*alpha1
         al.assign(alpha1)
         print('NEW Time Step:', dt)
         print('NEW Dump:', alpha1)
