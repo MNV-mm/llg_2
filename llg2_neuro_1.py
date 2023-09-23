@@ -815,7 +815,7 @@ while j <= 10:
         count += 1
     else:
         count = 0
-    if (count >= 10) and (2*dt <= 20):
+    if (count >= 10) and (2*dt <= 2):
         count = 0
         dt = round(2*dt, 4) #0.05
         Dt.assign(dt)
