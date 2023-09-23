@@ -811,15 +811,18 @@ while j <= 10:
         j += 1
     i += 1
     
-    if (abs(delta_E/E) <= 5E-9):# and (delta_E < 0):
+    if (abs(delta_E/E) <= 1E-2):# and (delta_E < 0):
         count += 1
     else:
         count = 0
     if count >= 10:
         count = 0
-        dt = round(dt + dt/2, 4) #0.05
+        dt = round(2*dt, 4) #0.05
         Dt.assign(dt)
+        alpha1 = 2*alpha1
+        al.assign(alpha1)
         print('NEW Time Step:', dt)
+        print('NEW Dump:', alpha1)
     
     m.assign(v)
     phi_n = DD_Hd.pot(m, wall_type, beta, phi, m_b_2d, pbc)
