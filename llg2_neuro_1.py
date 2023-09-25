@@ -177,7 +177,7 @@ comm = MPI.comm_world
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-alpha1 = 1E-4 #4 
+alpha1 = 4. 
 #alpha2 = 10   #parameter alpha
 UU0 = 1E-3*0*2*10*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
@@ -597,7 +597,7 @@ def my_boundary(x, on_boundary):
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
 
-in_type = 'old'
+in_type = 'new'
 if in_type == 'old':
     hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/m_final.h5', 'r')
     m = Function(FS)
@@ -720,7 +720,7 @@ tol = 1E-9
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 100
+N_f = 500
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -832,6 +832,12 @@ while j <= 10:
     # U = u.vector()
     # m.vector()[:] = U
     m1, m2, m3 = m.split()
+    
+    hdf_m = HDF5File(mesh.mpi_comm(), route_0 + 'results/series_new/m_final.h5', 'w')
+    hdf_m.write(mesh, "/my_mesh")
+    hdf_m.write(m, "/m_field")
+    hdf_m.write(phi, "/demag_pot")
+    hdf_m.close()
     
 
 
