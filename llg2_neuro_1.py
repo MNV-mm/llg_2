@@ -451,7 +451,7 @@ FS = FunctionSpace(mesh, El) #, constrained_domain=pbc
 El_1 = FiniteElement('CG', triangle, 1)
 #FS = FunctionSpace(mesh, El)
 FS_1 = FunctionSpace(mesh,El_1)
-EL_DP = FiniteElement('DP', triangle, 0)
+El_DP = FiniteElement('DP', triangle, 0)
 FS_DP = FunctionSpace(mesh, El_DP)
 # dy = 5
 # R0 = 10
