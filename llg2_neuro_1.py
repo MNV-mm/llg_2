@@ -94,7 +94,7 @@ def h_rest(m,p, e_f, dedz, phi, hd_s, kku, kkp, kkc, nu, np, at):
     an_vec = as_vector((-diff(w_an,m1)/2/kkp, -diff(w_an,m2)/2/kkp, -diff(w_an,m3)/2/kkp))
     #g_vec = as_vector((grad(dot(m,e_f))[0],grad(dot(m,e_f))[1],oo))
     phi_vec = as_vector((-0.5*phi.dx(0), -0.5*phi.dx(1), oo))
-    return vec + an_vec + phi_vec #+ hd_s
+    return vec + an_vec #+ phi_vec #+ hd_s
 
 def hs_rest(m,p,e_f,phi):
     m1, m2, m3 = split(m)
