@@ -451,6 +451,8 @@ FS = FunctionSpace(mesh, El) #, constrained_domain=pbc
 El_1 = FiniteElement('CG', triangle, 1)
 #FS = FunctionSpace(mesh, El)
 FS_1 = FunctionSpace(mesh,El_1)
+EL_DP = FiniteElement('DP', triangle, 0)
+FS_DP = FunctionSpace(mesh, El_DP)
 # dy = 5
 # R0 = 10
 # s_s = 0.05 #0.1
@@ -676,11 +678,11 @@ al = Constant(alpha1)
 # al = Expression('(x[0] <= -65 + tol) || (x[0]>=65+tol) || (x[1]<=-30+tol) || (x[1]>=30+tol)? alpha2:alpha1', degree = 0, tol = tol, alpha2 = alpha2, alpha1 = alpha1)
 pp = Constant(p)#p
 #ku = Constant(kku)
-ku = project(Ku_exp, FS_1)
+ku = project(Ku_exp, FS_DP)
 #kp = Constant(kkp)
-kp = project(Kp_exp, FS_1)
+kp = project(Kp_exp, FS_DP)
 #kc = Constant(kkc)
-kc = project(Kc_exp, FS_1)
+kc = project(Kc_exp, FS_DP)
 Ms = Constant(M_s)
 hy = project(Hy_expr,FS_1)
 
