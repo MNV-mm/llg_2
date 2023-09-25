@@ -599,7 +599,7 @@ def my_boundary(x, on_boundary):
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
 
-in_type = 'new'
+in_type = 'old'
 if in_type == 'old':
     hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/m_final.h5', 'r')
     m = Function(FS)
@@ -722,7 +722,7 @@ tol = 1E-9
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 500
+N_f = 250
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
