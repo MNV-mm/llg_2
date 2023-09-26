@@ -177,7 +177,7 @@ comm = MPI.comm_world
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-alpha1 = 1E-4 #4. 
+alpha1 = 4. 
 #alpha2 = 10   #parameter alpha
 UU0 = 1E-3*0*2*10*10/3 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
@@ -303,7 +303,7 @@ print(ph_0)
 
 
 # Create mesh and define function space
-Lx = 60 # 60 150 80
+Lx = 100 # 60 150 80
 Ly = 60 # 30 80 40
 
 """
@@ -599,7 +599,7 @@ def my_boundary(x, on_boundary):
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
 
-in_type = 'old'
+in_type = 'new'
 if in_type == 'old':
     hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/m_final.h5', 'r')
     m = Function(FS)
@@ -612,7 +612,7 @@ if in_type == 'new':
     m = project(ub,FS)
     #phi_0 = Function(FS_1)
     phi_0 = project(phi_nl, FS_1)
-    BC = DirichletBC(FS, ub, my_boundary)
+    BC = DirichletBC(FS, ub, boundary)
 if in_type == 'rand':
     m = project(ub,FS)
     m = DD_Hd.rand_vec(m, 0.001)
@@ -722,7 +722,7 @@ tol = 1E-9
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 100
+N_f = 700
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
