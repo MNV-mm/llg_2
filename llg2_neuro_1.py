@@ -179,7 +179,7 @@ size = comm.Get_size()
 
 alpha1 = 4. #1E-4 
 #alpha2 = 10   #parameter alpha
-UU0 = 10/3/400 #Voltage (CGS)
+UU0 = 2*10/3/100 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -204,7 +204,7 @@ route_0 = '/home/mnv/llg_nl/'
 
 theta_0 = 0*math.pi/4
 
-rr0 = 0.0000025 # cm - effective electrode radius
+rr0 = 0.00001 # cm - effective electrode radius
 dd = math.sqrt(AA/kkp)# characteristic domain wall width
 beta = math.sqrt(1+2*math.pi*M_s**2/kku)
 #beta_n = math.sqrt(1-(kkp-2*math.pi*M_s**2)/kku)
