@@ -94,7 +94,7 @@ def h_rest(m,p, e_f, dedz, phi, hd_s, kku, kkp, kkc, nu, np, at):
     an_vec = as_vector((-diff(w_an,m1)/2/kkp, -diff(w_an,m2)/2/kkp, -diff(w_an,m3)/2/kkp))
     #g_vec = as_vector((grad(dot(m,e_f))[0],grad(dot(m,e_f))[1],oo))
     phi_vec = as_vector((-0.5*phi.dx(0), -0.5*phi.dx(1), oo))
-    return vec + an_vec #+ phi_vec #+ hd_s
+    return vec + an_vec + phi_vec #+ hd_s
 
 def hs_rest(m,p,e_f,phi):
     m1, m2, m3 = split(m)
@@ -179,7 +179,7 @@ size = comm.Get_size()
 
 alpha1 = 4. #1E-4 
 #alpha2 = 10   #parameter alpha
-UU0 = 2*10/3/100 #Voltage (CGS)
+UU0 = 0*2*10/3/100 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -312,10 +312,10 @@ these subdomains have the form of a square
 """
 # coordinates for middle point of first square
 x_a = -15
-y_a = 10
+y_a = 7
 # width and height
-delta_x = 5
-delta_y = 5
+delta_x = 3
+delta_y = 3
 # period for following squares
 period = 15
 
@@ -722,7 +722,7 @@ tol = 1E-9
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 400
+N_f = 1000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -793,8 +793,8 @@ while j <= 10:
     mwrite(route_0 + 'results/avg_table.txt', data, 'a', rank)
     if i%20 == 0:
         m_file.write(m, T)
-        #hd_v_file.write(phi, T)
-        #diff_file.write(diffr, T)
+        hd_v_file.write(phi, T)
+        diff_file.write(diffr, T)
     T = T + dt    
     # vtkfile_m2 << m2
     # vtkfile_m3 << m3
