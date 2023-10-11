@@ -177,7 +177,7 @@ comm = MPI.comm_world
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-alpha1 = 1000*1E-4 #4. 
+alpha1 = 10*1E-4 #4. 
 #alpha2 = 10   #parameter alpha
 UU0 = 0*2*10/3/100 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
