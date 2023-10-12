@@ -177,7 +177,7 @@ comm = MPI.comm_world
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-alpha1 = 10*1E-4 #4. 
+alpha1 = 1E-4 #4. 
 #alpha2 = 10   #parameter alpha
 UU0 = 0*2*10/3/100 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
@@ -722,7 +722,7 @@ tol = 1E-9
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 4500 #500
+N_f = 300 #500
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
