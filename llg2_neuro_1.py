@@ -599,7 +599,7 @@ def my_boundary(x, on_boundary):
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
 
-in_type = 'new'
+in_type = 'old'
 if in_type == 'old':
     hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/m_final.h5', 'r')
     m = Function(FS)
@@ -715,7 +715,7 @@ phi = DD_Hd.pot(m, wall_type, beta, phi_0, m_b_2d, pbc)
 i = 0
 j = 0
 count = 0
-dt = 0.01 #1.28
+dt = 0.32 #1.28
 Dt = Constant(dt)
 T =  1
 tol = 1E-9
@@ -817,7 +817,7 @@ while j <= 10:
         count += 1
     else:
         count = 0
-    if (count >= 10) and (3*dt <= 1):
+    if (count >= 10) and (4*dt <= 1):
         count = 0
         dt = round(2*dt, 4) #0.05
         Dt.assign(dt)
