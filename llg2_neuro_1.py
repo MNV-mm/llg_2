@@ -177,7 +177,7 @@ comm = MPI.comm_world
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-alpha1 = 1E-4 #4. 
+alpha1 = 1. #1E-4 #4. 
 #alpha2 = 10   #parameter alpha
 UU0 = 0*2*10/3/100 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
@@ -599,7 +599,7 @@ def my_boundary(x, on_boundary):
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
 
-in_type = 'old'
+in_type = 'new'
 if in_type == 'old':
     hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/m_final.h5', 'r')
     m = Function(FS)
@@ -715,14 +715,14 @@ phi = DD_Hd.pot(m, wall_type, beta, phi_0, m_b_2d, pbc)
 i = 0
 j = 0
 count = 0
-dt = 0.64 #0.01 #1.28
+dt = 0.01 #1.28
 Dt = Constant(dt)
 T =  1
 tol = 1E-9
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 300 #500
+N_f = 500
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -817,7 +817,7 @@ while j <= 10:
         count += 1
     else:
         count = 0
-    if (count >= 10) and (2*dt <= 1):
+    if (count >= 10) and (3*dt <= 1):
         count = 0
         dt = round(2*dt, 4) #0.05
         Dt.assign(dt)
