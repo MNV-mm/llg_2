@@ -75,7 +75,7 @@ def max_norm(u):
     norm_prev = np.max(np.sqrt(V1*V1 + V2*V2 + V3*V3))
     return norm_prev
 
-def h_rest(m,p, e_f, dedz, phi, hd_s, kku, kkp, kkc, nu, np, at):
+def h_rest(m,p, e_f, dedz, phi, hd_s, kku):
     m1, m2, m3 = split(m)
     e1, e2, e3 = split(e_f)
     dedz_1, dedz_2, dedz_3 = split(dedz)
@@ -88,10 +88,9 @@ def h_rest(m,p, e_f, dedz, phi, hd_s, kku, kkp, kkc, nu, np, at):
     m2 = variable(m2)
     m3 = variable(m3)
     mm = as_vector((m1, m2, m3))
-    m_cryst = dot(at,mm)
-    w_an = -kku*dot(mm,nu)**2 + kkp*dot(mm,np)**2 + kkc*(m_cryst[0]**2*m_cryst[1]**2 + m_cryst[0]**2*m_cryst[2]**2 + m_cryst[1]**2*m_cryst[2]**2)
-    #w_an = -kkp*m3**2
-    an_vec = as_vector((-diff(w_an,m1)/2/kkp, -diff(w_an,m2)/2/kkp, -diff(w_an,m3)/2/kkp))
+    
+    w_an = -kku*m3**2
+    an_vec = as_vector((-diff(w_an,m1)/2/kku, -diff(w_an,m2)/2/kku, -diff(w_an,m3)/2/kku))
     #g_vec = as_vector((grad(dot(m,e_f))[0],grad(dot(m,e_f))[1],oo))
     phi_vec = as_vector((-0.5*phi.dx(0), -0.5*phi.dx(1), oo))
     return vec + an_vec + phi_vec #+ hd_s
@@ -205,10 +204,10 @@ route_0 = '/home/mnv/llg_nl/'
 theta_0 = 0*math.pi/4
 
 rr0 = 0.00001 # cm - effective electrode radius
-dd = math.sqrt(AA/kkp)# characteristic domain wall width
+dd = math.sqrt(AA/kku)# characteristic domain wall width
 beta = math.sqrt(1+2*math.pi*M_s**2/kku)
 #beta_n = math.sqrt(1-(kkp-2*math.pi*M_s**2)/kku)
-dd_n = math.sqrt(AA/(kkp+2*math.pi*M_s**2))
+dd_n = math.sqrt(AA/(kku+2*math.pi*M_s**2))
 g = 10**(-6) # magnetoelectric constant
 #p = g*UU0/rr0/(2*math.sqrt(AA*kk))
 # p = g*UU0/1e-4/(2*math.sqrt(AA*kk)/6)*0.1
@@ -220,85 +219,6 @@ yy0 = 10
 #list_linear_solver_methods()
 
 # In[anisotropy]
-# # Образец 27
-tu = 40/180*math.pi
-psu = 189.4/180*math.pi
-psp = 9.44/180*math.pi
-
-# Образец 30
-#tu = 50.2/180*math.pi
-#psu = -203/180*math.pi
-#psp = -185/180*math.pi
-
-# Образец 32
-# tu = 46.2/180*math.pi
-# psu = -16.7/180*math.pi
-# psp = 9.7/180*math.pi
-
-betta_deg = 90 + 52.5 #(учтено, что здесь нормаль к плоскости стенки направлена вдоль оси Оy)
-betta = betta_deg/180*np.pi
-
-Nu = as_vector((sin(tu)*cos(psu), sin(tu)*sin(psu), cos(tu)))
-NNu = np.array([np.sin(tu)*np.cos(psu), np.sin(tu)*np.sin(psu), np.cos(tu)])
-
-sin_g = -cos(tu)/sqrt(cos(tu)**2 + sin(tu)**2*cos(psu-psp)**2)
-cos_g = sin(tu)*cos(psu-psp)/sqrt(cos(tu)**2 + sin(tu)**2*cos(psu-psp)**2)
-Np = as_vector((sin_g*cos(psp), sin_g*sin(psp), cos_g))
-
-Sin_g = -np.cos(tu)/np.sqrt(np.cos(tu)**2 + np.sin(tu)**2*np.cos(psu-psp)**2)
-Cos_g = np.sin(tu)*np.cos(psu-psp)/np.sqrt(np.cos(tu)**2 + np.sin(tu)**2*np.cos(psu-psp)**2)
-NNp = np.array([Sin_g*np.cos(psp), Sin_g*np.sin(psp), Cos_g])
-
-a_rot = as_matrix(((cos(betta),  -sin(betta), 0),
-                (sin(betta), cos(betta), 0),
-                (0, 0, 1)))
-
-Nu = dot(a_rot, Nu)
-Np = dot(a_rot, Np)
-
-aa_rot = np.array([[ np.cos(betta),  -np.sin(betta), 0.],
-              [np.sin(betta),  np.cos(betta), 0.],
-              [0., 0., 1.]])
-
-NNu = np.matmul(aa_rot, NNu)
-NNp = np.matmul(aa_rot, NNp)
-
-'''
-Матрица, содержащая в строках разложение ортов рабочей СК Лисовского по ортам 
-кристаллографической СК (для FEniCS)
-'''
-a0 = as_matrix(((-2/math.sqrt(5), 1/math.sqrt(5), 0),
-                (0, 0, 1),
-                 (1/math.sqrt(5), 2/math.sqrt(5), 0)))
-
-'''
-Матрица, содержащая в строках разложение ортов рабочей СК Лисовского по ортам 
-кристаллографической СК
-'''
-Mat = np.array([[-2/np.sqrt(5), 1/np.sqrt(5), 0.],
-               [0., 0., 1],
-               [1/np.sqrt(5), 2/np.sqrt(5), 0.]])
-'''
-Матрица, переводящая компоненты намагниченности относительно текущей СК в 
-компоненты намагниченности относительно кристаллографической СК
-'''
-Mat_1 = np.matmul(np.linalg.inv(Mat),np.linalg.inv(aa_rot))
-#Mat_1 = np.identity(3)
-
-from ufl.operators import transpose, inv
-
-at = dot(inv(a0),inv(a_rot))
-
-print('before aa_min')
-
-#aa_res = DD_Hd.aa_min(NNu, NNp, Mat_1, kku, kkp, kkc)
-#th_0, ph_0 = aa_res.x
-th_0 = 2.4620373759433924 #2.013269620451453
-ph_0 = 3.078401676352299 #3.093092175684844
-print(th_0)
-print(ph_0)
-
-
 # In[2]:
 
 
@@ -361,8 +281,8 @@ class KuClass(UserExpression):
                 values[0] = self.ku_1
 
 Ku_exp = KuClass(materials, kku, 1.1*kku, degree = 0)
-Kp_exp = KuClass(materials, kkp, 1.1*kkp, degree = 0)
-Kc_exp = KuClass(materials, kkc, 1.1*kkc, degree = 0)
+# Kp_exp = KuClass(materials, kkp, 1.1*kkp, degree = 0)
+# Kc_exp = KuClass(materials, kkc, 1.1*kkc, degree = 0)
 
 #hdf_E = HDF5File(mesh.mpi_comm(), route_0 + 'results/e_field/E_hdf_20.h5', 'r')
 #hdf_E.read(mesh_0, "/my_mesh")
@@ -562,13 +482,13 @@ if wall_type =='neel':
     #ub = Expression(("0", "sqrt(1-(tanh(x[1]/d)*tanh(x[1]/d)))", "tanh(x[1]/d)", "0"), degree = 4, d=1/beta)
     
 if wall_type =='bloch':
-    ub = Expression((v_1_x, v_1_y, v_1_z), degree = 4, ph_0 = ph_0, th_0 = th_0)
-    #ub = Expression(("-sin(2*atan(exp(x[1]/d)))", "cos(2*atan(exp(x[1]/d)))*sin(a)", "cos(2*atan(exp(x[1]/d)))*cos(a)"), degree = 4, d=1, a = -theta_0)
+    #ub = Expression((v_1_x, v_1_y, v_1_z), degree = 4, ph_0 = ph_0, th_0 = th_0)
+    ub = Expression(("-sin(2*atan(exp(x[1]/d)))", "0.", "cos(2*atan(exp(x[1]/d)))"), degree = 4, d=1, a = -theta_0)
 
 if wall_type =='h':
     ub = Expression(("0", "0.", "1."), degree = 4)
 
-phi_nl = Expression(int_y, degree = 4, ph_0 = ph_0, th_0 = th_0) # Expression("4*p*2*b*atan(exp(x[1]/b))", degree=4, p = math.pi, b = beta)
+phi_nl = Expression("4*p*2*b*atan(exp(x[1]/b))", degree=4, p = math.pi, b = beta)
 Hy_expr = Expression("-(5.5 + 0.00000002*(pow(x[1],6) + 300000*pow(x[1],2)))", degree = 4)
 
 # Define electric field
@@ -581,7 +501,7 @@ if electrode_type == 'circle':
     e_v = project(e_v, FS)
     dedz_v = Expression((dE1_dz_c, dE2_dz_c, dE3_dz_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)
     dedz_v = project(dedz_v, FS)
-    p = g*UU0/rr0/(2*math.sqrt(AA*kkp))
+    p = g*UU0/rr0/(2*math.sqrt(AA*kku))
     print("p=", p)
 if electrode_type == 'plane':
     print('plane_electrode')
@@ -599,7 +519,7 @@ def my_boundary(x, on_boundary):
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
 
-in_type = 'old'
+in_type = 'new'
 if in_type == 'old':
     hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/m_final.h5', 'r')
     m = Function(FS)
@@ -624,7 +544,7 @@ m = norm_sol_s(m, FS)
 m1, m2, m3 = m.split()
 
 h = 0.001 #cm
-l = math.sqrt(4*math.sqrt(AA*kkp)/(M_s**2)*h)/dd
+l = math.sqrt(4*math.sqrt(AA*kku)/(M_s**2)*h)/dd
 Z = h/dd/2
 
 print('before_hds')
@@ -680,9 +600,9 @@ pp = Constant(p)#p
 #ku = Constant(kku)
 ku = project(Ku_exp, FS_DP)
 #kp = Constant(kkp)
-kp = project(Kp_exp, FS_DP)
+#kp = project(Kp_exp, FS_DP)
 #kc = Constant(kkc)
-kc = project(Kc_exp, FS_DP)
+#kc = project(Kc_exp, FS_DP)
 Ms = Constant(M_s)
 hy = project(Hy_expr,FS_1)
 
@@ -715,21 +635,21 @@ phi = DD_Hd.pot(m, wall_type, beta, phi_0, m_b_2d, pbc)
 i = 0
 j = 0
 count = 0
-dt = 0.32 #1.28
+dt = 0.001 #1.28
 Dt = Constant(dt)
 T =  1
 tol = 1E-9
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 2000
+N_f = 200
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
 Hd_v_y = as_vector((oo, Constant(0.), oo)) #Constant(-26/2) on y axis
 #hd_s+hd_ext
 
-F = dot(w,(v-m)/Dt-al*cross(v,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/kp*phi,M_s*M_s/2/kp*(Hd_v_y), ku, kp, kc, Nu, Np, at)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
+F = dot(w,(v-m)/Dt-al*cross(v,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/ku*phi,M_s*M_s/2/ku*(Hd_v_y), ku)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
 Jac = derivative(F,v)
 
 diffr = Function(FS)
@@ -769,24 +689,18 @@ while j <= 10:
     
     w_ex = MPI.sum(comm, assemble((dot(grad(m1),grad(m1)) + dot(grad(m2),grad(m2)) + dot(grad(m3),grad(m3)))*dx)/(Lx*Ly))
     m_cryst = dot(at,m)
-    w_a = MPI.sum(comm, assemble((-kku*dot(m,Nu)**2 + kkp*dot(m,Np)**2 + kkc*(m_cryst[0]**2*m_cryst[1]**2 + m_cryst[0]**2*m_cryst[2]**2 + m_cryst[1]**2*m_cryst[2]**2))*dx)/(Lx*Ly*kkp))
-    w_a_u = MPI.sum(comm, assemble((-kku*dot(m,Nu)**2)*dx)/(Lx*Ly*kkp)) #assemble(-m3*m3*dx)/(Lx*Ly)
-    w_a_p = MPI.sum(comm, assemble((kkp*dot(m,Np)**2)*dx)/(Lx*Ly*kkp))
-    w_a_c = MPI.sum(comm, assemble((kkc*(m_cryst[0]**2*m_cryst[1]**2 + m_cryst[0]**2*m_cryst[2]**2 + m_cryst[1]**2*m_cryst[2]**2))*dx)/(Lx*Ly*kkp))
-    w_hd_1 = MPI.sum(comm, assemble(-dot(to_2d(m),-grad(phi))*dx)/(Lx*Ly)*(M_s*M_s/2/kkp))
-    w_hd_2 = MPI.sum(comm, assemble(-dot(m,Hd_v_y)*dx)/(Lx*Ly)*M_s/2/kkp)
+    w_a = MPI.sum(comm, assemble((-kku*m3**2)*dx)/(Lx*Ly*kku))
+    w_hd_1 = MPI.sum(comm, assemble(-dot(to_2d(m),-grad(phi))*dx)/(Lx*Ly)*(M_s*M_s/2/kku))
+    w_hd_2 = MPI.sum(comm, assemble(-dot(m,Hd_v_y)*dx)/(Lx*Ly)*M_s/2/kku)
     w_me = MPI.sum(comm, assemble(-pp*dot(e_f,m*div(to_2d(m)) - grad(m)*m)*dx)/(Lx*Ly))
     w_tot = w_a + w_ex + w_hd_1 + w_me
     data_ex = str(w_ex)
     data_a = str(w_a)
-    data_w_a_u = str(w_a_u)
-    data_w_a_p = str(w_a_p)
-    data_w_a_c = str(w_a_c)
     data_hd_1 = str(w_hd_1)
     data_hd_2 = str(w_hd_2)
     data_w_me = str(w_me)
     data_tot = str(w_tot)
-    data = str(round(T,5)) + ', ' + data_ex + ', ' + data_a + ', ' + data_w_a_u + ', ' + data_w_a_p + ', ' + data_w_a_c + ', '  + data_hd_1 + ', ' + data_hd_2 + ', ' + data_w_me + ', ' + data_tot + ', ' + str(E) + '\n'
+    data = str(round(T,5)) + ', ' + data_ex + ', ' + data_a + ', '  + data_hd_1 + ', ' + data_hd_2 + ', ' + data_w_me + ', ' + data_tot + ', ' + str(E) + '\n'
     #file_txt = open(route_0 + 'results/avg_table.txt','a')
     #file_txt.write(data)
     #file_txt.close()
