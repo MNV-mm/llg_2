@@ -648,8 +648,8 @@ oo = Constant(0)
 PI = Constant(math.pi)
 Hd_v_y = as_vector((oo, Constant(0.), oo)) #Constant(-26/2) on y axis
 #hd_s+hd_ext
-
-F = dot(w,(v-m)/Dt-al*cross(v,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/ku*phi,M_s*M_s/2/ku*(Hd_v_y), ku)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
+#M_s*M_s/2/ku*(Hd_v_y)
+F = dot(w,(v-m)/Dt-al*cross(v,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/ku*phi, Constant(0.), ku)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
 Jac = derivative(F,v)
 
 diffr = Function(FS)
