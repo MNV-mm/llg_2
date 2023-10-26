@@ -239,7 +239,7 @@ delta_y = 3
 # period for following squares
 period = 15
 
-mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), 5*50, 5*50) # 1140, 400
+mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), int(7*Lx), int(7*Ly)) # 1140, 400
 #mesh_0 = Mesh(route_0 + 'MESH.xml')
 
 """
@@ -473,7 +473,7 @@ intg_1 = mat*intg_0
 int_y = sp.ccode(intg_1[1]*4*sp.pi)
 
 # In[3]:
-wall_type = 'bloch'# 'bloch'  'neel' 'h'
+wall_type = 'neel'# 'bloch'  'neel' 'h'
 # Define boundary condition
 if wall_type =='neel':
     ub = Expression(("0", "-sin(2*atan(exp(x[1]/d)))", "cos(2*atan(exp(x[1]/d)))"), degree = 4, d=1)
@@ -643,14 +643,14 @@ tol = 1E-9
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 300
+N_f = 500
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
-Hd_v_y = as_vector((oo, Constant(0.), oo)) #Constant(-26/2) on y axis
+Hd_v_y = as_vector((oo, Constant(-13), oo)) #Constant(-26/2) on y axis
 #hd_s+hd_ext
 #M_s*M_s/2/ku*(Hd_v_y)
-F = dot(w,(v-m)/Dt-al*cross(v,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/ku*phi, Constant(0.), ku)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
+F = dot(w,(v-m)/Dt-al*cross(v,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/ku*phi, M_s*M_s/2/ku*(Hd_v_y), ku)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
 Jac = derivative(F,v)
 
 diffr = Function(FS)
