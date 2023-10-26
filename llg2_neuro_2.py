@@ -656,7 +656,7 @@ Jac = derivative(F,v)
 diffr = Function(FS)
 Hd = Function(FS)
 
-title = 't' + ', '  + 'w_ex' + ', '  + 'w_a' + ', ' + 'w_a_u' + ', ' + 'w_a_p' + ', ' + 'w_a_c' + ', ' + 'w_hd_1' + ', ' + 'w_hd_2'  +  ', ' + 'w_me' + ', '  + 'w_tot' + ', '  + 'diff\n'
+title = 't' + ', '  + 'w_ex' + ', '  + 'w_a' + ', ' + 'w_hd_1' + ', ' + 'w_hd_2'  +  ', ' + 'w_me' + ', '  + 'w_tot' + ', '  + 'diff\n'
 #file_txt = open(route_0 + 'results/avg_table.txt','w')
 #file_txt.write(title)
 #file_txt.close()
