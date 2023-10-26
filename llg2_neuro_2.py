@@ -488,7 +488,8 @@ if wall_type =='bloch':
 if wall_type =='h':
     ub = Expression(("0", "0.", "1."), degree = 4)
 
-phi_nl = Expression("4*p*2*b*atan(exp(x[1]/b))", degree=4, p = math.pi, b = beta)
+#phi_nl = Expression("4*p*2*b*atan(exp(x[1]/b))", degree=4, p = math.pi, b = beta)
+phi_nl = Expression("0", degree=4, p = math.pi, b = beta)
 Hy_expr = Expression("-(5.5 + 0.00000002*(pow(x[1],6) + 300000*pow(x[1],2)))", degree = 4)
 
 # Define electric field
