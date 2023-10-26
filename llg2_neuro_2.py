@@ -688,7 +688,6 @@ while j <= 10:
     E = sqrt(abs(assemble(error)))/(Lx*Ly)/dt
     
     w_ex = MPI.sum(comm, assemble((dot(grad(m1),grad(m1)) + dot(grad(m2),grad(m2)) + dot(grad(m3),grad(m3)))*dx)/(Lx*Ly))
-    m_cryst = dot(at,m)
     w_a = MPI.sum(comm, assemble((-kku*m3**2)*dx)/(Lx*Ly*kku))
     w_hd_1 = MPI.sum(comm, assemble(-dot(to_2d(m),-grad(phi))*dx)/(Lx*Ly)*(M_s*M_s/2/kku))
     w_hd_2 = MPI.sum(comm, assemble(-dot(m,Hd_v_y)*dx)/(Lx*Ly)*M_s/2/kku)
