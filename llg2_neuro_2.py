@@ -176,7 +176,7 @@ comm = MPI.comm_world
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-alpha1 = 1. #1E-4 #4. 
+alpha1 = 1E-4 #1. 
 #alpha2 = 10   #parameter alpha
 UU0 = 0*2*10/3/100 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
@@ -520,7 +520,7 @@ def my_boundary(x, on_boundary):
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
 
-in_type = 'new'
+in_type = 'old'
 if in_type == 'old':
     hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/m_final.h5', 'r')
     m = Function(FS)
@@ -643,7 +643,7 @@ tol = 1E-9
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 500
+N_f = 200
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -693,7 +693,7 @@ while j <= 10:
     w_hd_1 = MPI.sum(comm, assemble(-dot(to_2d(m),-grad(phi))*dx)/(Lx*Ly)*(M_s*M_s/2/kku))
     w_hd_2 = MPI.sum(comm, assemble(-dot(m,Hd_v_y)*dx)/(Lx*Ly)*M_s/2/kku)
     w_me = MPI.sum(comm, assemble(-pp*dot(e_f,m*div(to_2d(m)) - grad(m)*m)*dx)/(Lx*Ly))
-    w_tot = w_a + w_ex + w_hd_1 + w_me
+    w_tot = w_a + w_ex + w_hd_1 + w_hd_2 + w_me
     data_ex = str(w_ex)
     data_a = str(w_a)
     data_hd_1 = str(w_hd_1)
