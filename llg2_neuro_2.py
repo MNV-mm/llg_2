@@ -176,9 +176,9 @@ comm = MPI.comm_world
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-alpha1 = 1. #1E-4 
+alpha1 = 2. #1. #1E-4 
 #alpha2 = 10   #parameter alpha
-UU0 = 4*10/3/100 #Voltage (CGS)
+UU0 = -4*10/3/100 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -213,7 +213,7 @@ g = 10**(-6) # magnetoelectric constant
 # p = g*UU0/1e-4/(2*math.sqrt(AA*kk)/6)*0.1
 Hy = -30
 xx0 = 0
-yy0 = 10
+yy0 = -3
 #beta = 1.2#parameter beta
 #print(parameters.linear_algebra_backend)
 #list_linear_solver_methods()
@@ -495,12 +495,12 @@ Hy_expr = Expression("-(5.5 + 0.00000002*(pow(x[1],6) + 300000*pow(x[1],2)))", d
 # Define electric field
 electrode_type = 'circle' # 'plane'
 if electrode_type == 'circle':
-    e1 = Expression((E1_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)   
-    e2 = Expression((E2_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)
-    e3 = Expression((E3_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)
-    e_v = Expression((E1_c, E2_c, E3_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)
+    e1 = Expression((E1_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = yy0, per = period)   
+    e2 = Expression((E2_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = yy0, per = period)
+    e3 = Expression((E3_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = yy0, per = period)
+    e_v = Expression((E1_c, E2_c, E3_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = yy0, per = period)
     e_v = project(e_v, FS)
-    dedz_v = Expression((dE1_dz_c, dE2_dz_c, dE3_dz_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)
+    dedz_v = Expression((dE1_dz_c, dE2_dz_c, dE3_dz_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = yy0, per = period)
     dedz_v = project(dedz_v, FS)
     p = g*UU0/rr0/(2*math.sqrt(AA*kku))
     print("p=", p)
@@ -643,7 +643,7 @@ tol = 1E-9
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 1000
+N_f = 500
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
