@@ -178,7 +178,7 @@ size = comm.Get_size()
 
 alpha1 = 2. #1. #1E-4 
 #alpha2 = 10   #parameter alpha
-UU0 = -4*10/3/100 #Voltage (CGS)
+UU0 = -0*4*10/3/100 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -213,7 +213,7 @@ g = 10**(-6) # magnetoelectric constant
 # p = g*UU0/1e-4/(2*math.sqrt(AA*kk)/6)*0.1
 Hy = -30
 xx0 = 0
-yy0 = -3
+yy0 = -1
 #beta = 1.2#parameter beta
 #print(parameters.linear_algebra_backend)
 #list_linear_solver_methods()
@@ -223,8 +223,8 @@ yy0 = -3
 
 
 # Create mesh and define function space
-Lx = 100 # 60 150 80
-Ly = 60 # 30 80 40
+Lx = 70 # 60 150 80
+Ly = 30 # 30 80 40
 
 """
 parameters for subdomains with high anisotropy
@@ -232,7 +232,7 @@ these subdomains have the form of a square
 """
 # coordinates for middle point of first square
 x_a = -15
-y_a = 7
+y_a = 4
 # width and height
 delta_x = 3
 delta_y = 3
@@ -520,7 +520,7 @@ def my_boundary(x, on_boundary):
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
 
-in_type = 'old'
+in_type = 'new'
 if in_type == 'old':
     hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/m_final.h5', 'r')
     m = Function(FS)
@@ -643,7 +643,7 @@ tol = 1E-9
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 500
+N_f = 1000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -705,7 +705,7 @@ while j <= 10:
     #file_txt.write(data)
     #file_txt.close()
     mwrite(route_0 + 'results/avg_table.txt', data, 'a', rank)
-    if i%5 == 0:
+    if i%10 == 0:
         m_file.write(m, T)
         hd_v_file.write(phi, T)
         diff_file.write(diffr, T)
