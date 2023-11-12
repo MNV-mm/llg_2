@@ -636,14 +636,14 @@ phi = DD_Hd.pot(m, wall_type, beta, phi_0, m_b_2d, pbc)
 i = 0
 j = 0
 count = 0
-dt = 0.001 #1.28
+dt = 0.256 #0.001 #1.28
 Dt = Constant(dt)
 T =  1
 tol = 1E-9
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 500 #1000
+N_f = 10000 #1000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -705,7 +705,7 @@ while j <= 10:
     #file_txt.write(data)
     #file_txt.close()
     mwrite(route_0 + 'results/avg_table.txt', data, 'a', rank)
-    if i%5 == 0:
+    if i%50 == 0:
         m_file.write(m, T)
         hd_v_file.write(phi, T)
         diff_file.write(diffr, T)
