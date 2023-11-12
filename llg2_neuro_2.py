@@ -643,7 +643,7 @@ tol = 1E-9
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 10000 #1000
+N_f = 5000 #1000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
@@ -705,7 +705,7 @@ while j <= 10:
     #file_txt.write(data)
     #file_txt.close()
     mwrite(route_0 + 'results/avg_table.txt', data, 'a', rank)
-    if i%50 == 0:
+    if i%25 == 0:
         m_file.write(m, T)
         hd_v_file.write(phi, T)
         diff_file.write(diffr, T)
