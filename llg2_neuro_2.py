@@ -620,7 +620,7 @@ e_file.write(e_f)
 e_file.close()
 
 ku_file =  XDMFFile(route_0 + 'results/graphs/ku_file.xdmf')
-ku_file.write(ku)
+ku_file.write(ku_func)
 ku_file.close()
 
 dedz_file =  XDMFFile(route_0 + 'results/graphs/dedz_file.xdmf')
@@ -650,7 +650,7 @@ PI = Constant(math.pi)
 Hd_v_y = as_vector((oo, Constant(-4*np.pi), oo)) #Constant(-26/2) on y axis
 #hd_s+hd_ext
 #M_s*M_s/2/ku*(Hd_v_y)
-F = dot(w,(v-m)/Dt-al*cross(v,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/ku*phi, M_s*M_s/2/ku*(Hd_v_y), ku, Ku_func)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
+F = dot(w,(v-m)/Dt-al*cross(v,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/ku*phi, M_s*M_s/2/ku*(Hd_v_y), ku, ku_func)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
 Jac = derivative(F,v)
 
 diffr = Function(FS)
@@ -689,7 +689,7 @@ while j <= 10:
     E = sqrt(abs(assemble(error)))/(Lx*Ly)/dt
     
     w_ex = MPI.sum(comm, assemble((dot(grad(m1),grad(m1)) + dot(grad(m2),grad(m2)) + dot(grad(m3),grad(m3)))*dx)/(Lx*Ly))
-    w_a = MPI.sum(comm, assemble((-kku*m3**2*Ku_func)*dx)/(Lx*Ly*kku))
+    w_a = MPI.sum(comm, assemble((-kku*m3**2*ku_func)*dx)/(Lx*Ly*kku))
     w_hd_1 = MPI.sum(comm, assemble(-dot(to_2d(m),-grad(phi))*dx)/(Lx*Ly)*(M_s*M_s/2/kku))
     w_hd_2 = MPI.sum(comm, assemble(-dot(m,Hd_v_y)*dx)/(Lx*Ly)*M_s/2/kku)
     w_me = MPI.sum(comm, assemble(-pp*dot(e_f,m*div(to_2d(m)) - grad(m)*m)*dx)/(Lx*Ly))
