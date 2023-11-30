@@ -75,7 +75,7 @@ def max_norm(u):
     norm_prev = np.max(np.sqrt(V1*V1 + V2*V2 + V3*V3))
     return norm_prev
 
-def h_rest(m,p, e_f, dedz, phi, hd_s, kku):
+def h_rest(m,p, e_f, dedz, phi, hd_s, kku, Ku_func):
     m1, m2, m3 = split(m)
     e1, e2, e3 = split(e_f)
     dedz_1, dedz_2, dedz_3 = split(dedz)
@@ -89,7 +89,7 @@ def h_rest(m,p, e_f, dedz, phi, hd_s, kku):
     m3 = variable(m3)
     mm = as_vector((m1, m2, m3))
     
-    w_an = -kku*m3**2
+    w_an = -kku*m3**2*Ku_func
     an_vec = as_vector((-diff(w_an,m1)/2/kku, -diff(w_an,m2)/2/kku, -diff(w_an,m3)/2/kku))
     #g_vec = as_vector((grad(dot(m,e_f))[0],grad(dot(m,e_f))[1],oo))
     phi_vec = as_vector((-0.5*phi.dx(0), -0.5*phi.dx(1), oo))
@@ -280,7 +280,7 @@ class KuClass(UserExpression):
             else:
                 values[0] = self.ku_1
 
-Ku_exp = KuClass(materials, kku, 1.1*kku, degree = 0)
+Ku_func_exp = KuClass(materials, kku, 0.85*kku, degree = 0)
 # Kp_exp = KuClass(materials, kkp, 1.1*kkp, degree = 0)
 # Kc_exp = KuClass(materials, kkc, 1.1*kkc, degree = 0)
 
@@ -598,8 +598,8 @@ al = Constant(alpha1)
 # tol = 1E-14
 # al = Expression('(x[0] <= -65 + tol) || (x[0]>=65+tol) || (x[1]<=-30+tol) || (x[1]>=30+tol)? alpha2:alpha1', degree = 0, tol = tol, alpha2 = alpha2, alpha1 = alpha1)
 pp = Constant(p)#p
-#ku = Constant(kku)
-ku = project(Ku_exp, FS_DP)
+ku = Constant(kku)
+ku_func = project(Ku_func_exp, FS_DP)
 #kp = Constant(kkp)
 #kp = project(Kp_exp, FS_DP)
 #kc = Constant(kkc)
@@ -647,10 +647,10 @@ N_f = 500 #1000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
-Hd_v_y = as_vector((oo, Constant(-13), oo)) #Constant(-26/2) on y axis
+Hd_v_y = as_vector((oo, Constant(-4*np.pi), oo)) #Constant(-26/2) on y axis
 #hd_s+hd_ext
 #M_s*M_s/2/ku*(Hd_v_y)
-F = dot(w,(v-m)/Dt-al*cross(v,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/ku*phi, M_s*M_s/2/ku*(Hd_v_y), ku)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
+F = dot(w,(v-m)/Dt-al*cross(v,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/ku*phi, M_s*M_s/2/ku*(Hd_v_y), ku, Ku_func)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
 Jac = derivative(F,v)
 
 diffr = Function(FS)
@@ -689,7 +689,7 @@ while j <= 10:
     E = sqrt(abs(assemble(error)))/(Lx*Ly)/dt
     
     w_ex = MPI.sum(comm, assemble((dot(grad(m1),grad(m1)) + dot(grad(m2),grad(m2)) + dot(grad(m3),grad(m3)))*dx)/(Lx*Ly))
-    w_a = MPI.sum(comm, assemble((-kku*m3**2)*dx)/(Lx*Ly*kku))
+    w_a = MPI.sum(comm, assemble((-kku*m3**2*Ku_func)*dx)/(Lx*Ly*kku))
     w_hd_1 = MPI.sum(comm, assemble(-dot(to_2d(m),-grad(phi))*dx)/(Lx*Ly)*(M_s*M_s/2/kku))
     w_hd_2 = MPI.sum(comm, assemble(-dot(m,Hd_v_y)*dx)/(Lx*Ly)*M_s/2/kku)
     w_me = MPI.sum(comm, assemble(-pp*dot(e_f,m*div(to_2d(m)) - grad(m)*m)*dx)/(Lx*Ly))
