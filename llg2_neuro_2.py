@@ -636,7 +636,7 @@ phi = DD_Hd.pot(m, wall_type, beta, phi_0, m_b_2d, pbc)
 i = 0
 j = 0
 count = 0
-dt = 32*0.001 #1.28
+dt = 0.256
 Dt = Constant(dt)
 T =  1
 tol = 1E-9
@@ -731,7 +731,7 @@ while j <= 10:
         count += 1
     else:
         count = 0
-    if (count >= 10) and (4*dt <= 1):
+    if (count >= 10) and (dt <= 1):
         count = 0
         dt = round(2*dt, 4) #0.05
         Dt.assign(dt)
