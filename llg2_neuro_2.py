@@ -647,9 +647,10 @@ N_f = 500 #1000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
-Hd_v_y = as_vector((oo, Constant(-4*np.pi), oo)) #Constant(-26/2) on y axis
-#hd_s+hd_ext
-#M_s*M_s/2/ku*(Hd_v_y)
+Hd_v_y = as_vector((oo, Constant(-4*np.pi), kku/M_s**2*0.05))
+
+Hd_v_y = project(Expression(('0.', str(-4*np.pi), '-kku/M_s*0.05*tanh(x[0])'), degree = 4, kku = kku, M_s = M_s), FS)
+
 F = dot(w,(v-m)/Dt-al*cross(v,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/ku*phi, M_s*M_s/2/ku*(Hd_v_y), ku, ku_func)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
 Jac = derivative(F,v)
 
