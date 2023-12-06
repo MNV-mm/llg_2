@@ -182,10 +182,13 @@ UU0 = 0*2*10/3/50 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
-kku = 852.9 # erg/cm**3 - unaxial anisotropy constant
-kkp = 2440 # erg/cm**3 - rombic anisotropy constant
-kkc = -1*1275 # cubic anisotropy constant
-M_s = 4.26
+# kku = 852.9 # erg/cm**3 - unaxial anisotropy constant
+# kkp = 2440 # erg/cm**3 - rombic anisotropy constant
+# kkc = -1*1275 # cubic anisotropy constant
+# M_s = 4.26
+
+kku = 1000.0
+M_s = 4.
 
 # Образец 30
 #kku = -312 # erg/cm**3 - unaxial anisotropy constant
@@ -643,13 +646,13 @@ tol = 1E-9
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 500 #1000
+N_f = 1000 #1000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
 Hd_v_y = as_vector((oo, Constant(-4*np.pi), kku/M_s**2*0.05))
 
-Hd_v_y = project(Expression(('0.', str(-4*np.pi), '-kku/M_s*0.05*tanh(x[0])'), degree = 4, kku = kku, M_s = M_s), FS)
+Hd_v_y = project(Expression(('0.', str(-4*np.pi), '-kku/M_s/M_s*0.01*tanh(x[0])'), degree = 4, kku = kku, M_s = M_s), FS)
 
 F = dot(w,(v-m)/Dt-al*cross(v,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/ku*phi, M_s*M_s/2/ku*(Hd_v_y), ku, ku_func)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
 Jac = derivative(F,v)
