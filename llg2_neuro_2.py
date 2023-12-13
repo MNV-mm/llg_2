@@ -176,7 +176,7 @@ comm = MPI.comm_world
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-alpha1 = 2. 
+alpha1 = 0.9 
 #alpha2 = 10   #parameter alpha
 UU0 = 0*2*10/3/50 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
@@ -260,15 +260,34 @@ class Omega_1(SubDomain):
 class Omega_2(SubDomain):
     def inside(self, x, on_boundary):
         return (np.abs(x[0] - x_a - 2*period) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
+
+class Omega_3(SubDomain):
+    def inside(self, x, on_boundary):
+        return (np.abs(x[0] - x_a) <= delta_x/2 + tol) and (np.abs(x[1] + y_a) <= delta_y/2 + tol)
+
+class Omega_4(SubDomain):
+    def inside(self, x, on_boundary):
+        return (np.abs(x[0] - x_a - period) <= delta_x/2 + tol) and (np.abs(x[1] + y_a) <= delta_y/2 + tol)
+
+class Omega_5(SubDomain):
+    def inside(self, x, on_boundary):
+        return (np.abs(x[0] - x_a - 2*period) <= delta_x/2 + tol) and (np.abs(x[1] + y_a) <= delta_y/2 + tol)
     
 materials = MeshFunction('size_t', mesh, dim = 2)    
 
 subdomain_0 = Omega_0()
 subdomain_1 = Omega_1()
 subdomain_2 = Omega_2()
+subdomain_3 = Omega_3()
+subdomain_4 = Omega_4()
+subdomain_5 = Omega_5()
+
 subdomain_0.mark(materials, 1)
 subdomain_1.mark(materials, 1)
 subdomain_2.mark(materials, 1)
+subdomain_3.mark(materials, 1)
+subdomain_4.mark(materials, 1)
+subdomain_5.mark(materials, 1)
 
 class KuClass(UserExpression):
     def __init__(self, materials, ku_0, ku_1, **kwargs):
@@ -283,7 +302,7 @@ class KuClass(UserExpression):
             else:
                 values[0] = self.ku_1
 
-Ku_func_exp = KuClass(materials, 1, 0.85*1, degree = 0)
+Ku_func_exp = KuClass(materials, 1, 0.7*1, degree = 0)
 # Kp_exp = KuClass(materials, kkp, 1.1*kkp, degree = 0)
 # Kc_exp = KuClass(materials, kkc, 1.1*kkc, degree = 0)
 
