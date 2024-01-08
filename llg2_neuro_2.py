@@ -178,7 +178,7 @@ size = comm.Get_size()
 
 alpha1 = 0.9 
 #alpha2 = 10   #parameter alpha
-UU0 = 0*2*10/3/50 #Voltage (CGS)
+UU0 = 0*4*10/3/50 #Voltage (CGS)
 AA = 9.5*10**(-8) #4.3e-6 #2*10**(-8) #(erg/cm) - exchange constant
 
 # # Образец 27
@@ -251,27 +251,31 @@ Define some classes for subdomains
 tol = 1E-14
 class Omega_0(SubDomain):
     def inside(self, x, on_boundary):
-        return (np.abs(x[0] - x_a) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
+        return (np.abs(x[0]) <= delta_x/2 + tol) and (np.abs(x[1]) <= delta_y/2 + tol)
 
 class Omega_1(SubDomain):
     def inside(self, x, on_boundary):
-        return (np.abs(x[0] - x_a - period) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
+        return (np.abs(x[0] - x_a) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
 
 class Omega_2(SubDomain):
     def inside(self, x, on_boundary):
-        return (np.abs(x[0] - x_a - 2*period) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
+        return (np.abs(x[0]) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
 
 class Omega_3(SubDomain):
     def inside(self, x, on_boundary):
-        return (np.abs(x[0] - x_a) <= delta_x/2 + tol) and (np.abs(x[1] + y_a) <= delta_y/2 + tol)
+        return (np.abs(x[0] + x_a) <= delta_x/2 + tol) and (np.abs(x[1] + y_a) <= delta_y/2 + tol)
 
 class Omega_4(SubDomain):
     def inside(self, x, on_boundary):
-        return (np.abs(x[0] - x_a - period) <= delta_x/2 + tol) and (np.abs(x[1] + y_a) <= delta_y/2 + tol)
+        return (np.abs(x[0] - x_a) <= delta_x/2 + tol) and (np.abs(x[1] + 2*y_a) <= delta_y/2 + tol)
 
 class Omega_5(SubDomain):
     def inside(self, x, on_boundary):
-        return (np.abs(x[0] - x_a - 2*period) <= delta_x/2 + tol) and (np.abs(x[1] + y_a) <= delta_y/2 + tol)
+        return (np.abs(x[0]) <= delta_x/2 + tol) and (np.abs(x[1] + 2*y_a) <= delta_y/2 + tol)
+
+class Omega_6(SubDomain):
+    def inside(self, x, on_boundary):
+        return (np.abs(x[0] + x_a) <= delta_x/2 + tol) and (np.abs(x[1] + 2*y_a) <= delta_y/2 + tol)
     
 materials = MeshFunction('size_t', mesh, dim = 2)    
 
@@ -281,6 +285,7 @@ subdomain_2 = Omega_2()
 subdomain_3 = Omega_3()
 subdomain_4 = Omega_4()
 subdomain_5 = Omega_5()
+subdomain_6 = Omega_6()
 
 subdomain_0.mark(materials, 1)
 subdomain_1.mark(materials, 1)
@@ -288,6 +293,7 @@ subdomain_2.mark(materials, 1)
 subdomain_3.mark(materials, 1)
 subdomain_4.mark(materials, 1)
 subdomain_5.mark(materials, 1)
+subdomain_6.mark(materials, 1)
 
 class KuClass(UserExpression):
     def __init__(self, materials, ku_0, ku_1, **kwargs):
@@ -517,12 +523,12 @@ Hy_expr = Expression("-(5.5 + 0.00000002*(pow(x[1],6) + 300000*pow(x[1],2)))", d
 # Define electric field
 electrode_type = 'circle' # 'plane'
 if electrode_type == 'circle':
-    e1 = Expression((E1_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)   
-    e2 = Expression((E2_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)
-    e3 = Expression((E3_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)
-    e_v = Expression((E1_c, E2_c, E3_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)
+    e1 = Expression((E1_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a+3, per = period)   
+    e2 = Expression((E2_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a+3, per = period)
+    e3 = Expression((E3_c),degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a+3, per = period)
+    e_v = Expression((E1_c, E2_c, E3_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a+3, per = period)
     e_v = project(e_v, FS)
-    dedz_v = Expression((dE1_dz_c, dE2_dz_c, dE3_dz_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a, per = period)
+    dedz_v = Expression((dE1_dz_c, dE2_dz_c, dE3_dz_c), degree = 2, U0 = UU0, d = dd, r0 = rr0, x0 = x_a, y0 = y_a+3, per = period)
     dedz_v = project(dedz_v, FS)
     p = g*UU0/rr0/(2*math.sqrt(AA*kku))
     print("p=", p)
@@ -669,9 +675,9 @@ N_f = 1000 #1000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
-Hd_v_y = as_vector((oo, Constant(-4*np.pi), kku/M_s**2*0.05))
+Hd_v_y = as_vector((oo, Constant(-4*np.pi), oo))
 
-Hd_v_y = project(Expression(('0.', str(-4*np.pi), '-kku/M_s/M_s*0.01*tanh(x[0])'), degree = 4, kku = kku, M_s = M_s), FS)
+#Hd_v_y = project(Expression(('0.', str(-4*np.pi), '-kku/M_s/M_s*0.01*tanh(x[0])'), degree = 4, kku = kku, M_s = M_s), FS)
 
 F = dot(w,(v-m)/Dt-al*cross(v,(v-m)/Dt))*dx + dot(w,cross(v,h_rest(v,pp,e_f,dedz_v,M_s*M_s/2/ku*phi, M_s*M_s/2/ku*(Hd_v_y), ku, ku_func)))*dx - dot_v(v,v,w,pp,e_f)*dx + dot(w,cross(m,dmdn(m,n)))*ds + 2*pp*dot(w,cross(m,e_f))*dot(to_2d(m),n)*ds
 Jac = derivative(F,v)
