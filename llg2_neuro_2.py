@@ -263,19 +263,19 @@ class Omega_2(SubDomain):
 
 class Omega_3(SubDomain):
     def inside(self, x, on_boundary):
-        return (np.abs(x[0] + x_a) <= delta_x/2 + tol) and (np.abs(x[1] + y_a) <= delta_y/2 + tol)
+        return (np.abs(x[0] + x_a) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
 
 class Omega_4(SubDomain):
     def inside(self, x, on_boundary):
-        return (np.abs(x[0] - x_a) <= delta_x/2 + tol) and (np.abs(x[1] + 2*y_a) <= delta_y/2 + tol)
+        return (np.abs(x[0] - x_a) <= delta_x/2 + tol) and (np.abs(x[1] - 2*y_a) <= delta_y/2 + tol)
 
 class Omega_5(SubDomain):
     def inside(self, x, on_boundary):
-        return (np.abs(x[0]) <= delta_x/2 + tol) and (np.abs(x[1] + 2*y_a) <= delta_y/2 + tol)
+        return (np.abs(x[0]) <= delta_x/2 + tol) and (np.abs(x[1] - 2*y_a) <= delta_y/2 + tol)
 
 class Omega_6(SubDomain):
     def inside(self, x, on_boundary):
-        return (np.abs(x[0] + x_a) <= delta_x/2 + tol) and (np.abs(x[1] + 2*y_a) <= delta_y/2 + tol)
+        return (np.abs(x[0] + x_a) <= delta_x/2 + tol) and (np.abs(x[1] - 2*y_a) <= delta_y/2 + tol)
     
 materials = MeshFunction('size_t', mesh, dim = 2)    
 
