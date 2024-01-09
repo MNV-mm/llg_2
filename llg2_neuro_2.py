@@ -308,7 +308,7 @@ class KuClass(UserExpression):
             else:
                 values[0] = self.ku_1
 
-Ku_func_exp = KuClass(materials, 1, 0.7*1, degree = 0)
+Ku_func_exp = KuClass(materials, 1, 0.85*1, degree = 0)
 # Kp_exp = KuClass(materials, kkp, 1.1*kkp, degree = 0)
 # Kc_exp = KuClass(materials, kkc, 1.1*kkc, degree = 0)
 
