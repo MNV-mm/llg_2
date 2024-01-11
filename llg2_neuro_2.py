@@ -226,7 +226,7 @@ yy0 = -1
 
 
 # Create mesh and define function space
-Lx = 70 # 60 150 80
+Lx = 140 # 60 150 80
 Ly = 30 # 30 80 40
 
 """
@@ -234,15 +234,15 @@ parameters for subdomains with high anisotropy
 these subdomains have the form of a square
 """
 # coordinates for middle point of first square
-x_a = -15
+x_a = -35
 y_a = 4
 # width and height
 delta_x = 3
 delta_y = 3
 # period for following squares
-period = 15
+period = 35
 
-mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), int(7*Lx), int(7*Ly)) # 1140, 400
+mesh = RectangleMesh(Point(-Lx/2,-Ly/2), Point(Lx/2,Ly/2), int(5*Lx), int(5*Ly)) # 1140, 400
 #mesh_0 = Mesh(route_0 + 'MESH.xml')
 
 """
@@ -259,41 +259,41 @@ class Omega_1(SubDomain):
 
 class Omega_2(SubDomain):
     def inside(self, x, on_boundary):
-        return (np.abs(x[0]) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
-
-class Omega_3(SubDomain):
-    def inside(self, x, on_boundary):
         return (np.abs(x[0] + x_a) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
 
-class Omega_4(SubDomain):
-    def inside(self, x, on_boundary):
-        return (np.abs(x[0] - x_a) <= delta_x/2 + tol) and (np.abs(x[1] - 2*y_a) <= delta_y/2 + tol)
+# class Omega_3(SubDomain):
+#     def inside(self, x, on_boundary):
+#         return (np.abs(x[0] + x_a) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
 
-class Omega_5(SubDomain):
-    def inside(self, x, on_boundary):
-        return (np.abs(x[0]) <= delta_x/2 + tol) and (np.abs(x[1] - 2*y_a) <= delta_y/2 + tol)
+# class Omega_4(SubDomain):
+#     def inside(self, x, on_boundary):
+#         return (np.abs(x[0] - x_a) <= delta_x/2 + tol) and (np.abs(x[1] - 2*y_a) <= delta_y/2 + tol)
 
-class Omega_6(SubDomain):
-    def inside(self, x, on_boundary):
-        return (np.abs(x[0] + x_a) <= delta_x/2 + tol) and (np.abs(x[1] - 2*y_a) <= delta_y/2 + tol)
+# class Omega_5(SubDomain):
+#     def inside(self, x, on_boundary):
+#         return (np.abs(x[0]) <= delta_x/2 + tol) and (np.abs(x[1] - 2*y_a) <= delta_y/2 + tol)
+
+# class Omega_6(SubDomain):
+#     def inside(self, x, on_boundary):
+#         return (np.abs(x[0] + x_a) <= delta_x/2 + tol) and (np.abs(x[1] - 2*y_a) <= delta_y/2 + tol)
     
 materials = MeshFunction('size_t', mesh, dim = 2)    
 
 subdomain_0 = Omega_0()
 subdomain_1 = Omega_1()
 subdomain_2 = Omega_2()
-subdomain_3 = Omega_3()
-subdomain_4 = Omega_4()
-subdomain_5 = Omega_5()
-subdomain_6 = Omega_6()
+# subdomain_3 = Omega_3()
+# subdomain_4 = Omega_4()
+# subdomain_5 = Omega_5()
+# subdomain_6 = Omega_6()
 
 subdomain_0.mark(materials, 1)
 subdomain_1.mark(materials, 1)
 subdomain_2.mark(materials, 1)
-subdomain_3.mark(materials, 1)
-subdomain_4.mark(materials, 1)
-subdomain_5.mark(materials, 1)
-subdomain_6.mark(materials, 1)
+# subdomain_3.mark(materials, 1)
+# subdomain_4.mark(materials, 1)
+# subdomain_5.mark(materials, 1)
+# subdomain_6.mark(materials, 1)
 
 class KuClass(UserExpression):
     def __init__(self, materials, ku_0, ku_1, **kwargs):
@@ -548,7 +548,7 @@ def my_boundary(x, on_boundary):
 time_old = TimeSeries(route_0 + 'results/series_old/m')
 time_new = TimeSeries(route_0 + 'results/series_new/m')
 
-in_type = 'old'
+in_type = 'new'
 if in_type == 'old':
     hdf_m_old = HDF5File(mesh.mpi_comm(), route_0 + 'results/m_old/m_final.h5', 'r')
     m = Function(FS)
@@ -667,7 +667,7 @@ count = 0
 dt = 0.001 #0.256
 Dt = Constant(dt)
 T =  1
-tol = 1E-9
+tol = 1E-7
 theta = 1
 E_old = 0
 th = Constant(theta)
