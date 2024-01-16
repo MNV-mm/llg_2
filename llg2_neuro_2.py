@@ -507,7 +507,7 @@ sin_0 = -4*np.pi*4*4/2/1000/(1+2*np.pi*4**2/1000)
 cos_0 = np.sqrt(1-sin_0**2)
 if wall_type =='neel':
     #ub = Expression(("0", "-sin(2*atan(exp(x[1]/d)))", "cos(2*atan(exp(x[1]/d)))"), degree = 4, d=1)
-    ub = fen.Expression(("sin_0 - a*exp(-x[1]*x[1])", "sqrt(1-pow(sin_0 - a*exp(-x[1]*x[1]), 2) - pow(cos_0*cos(2*atan(exp(x[1]/d))), 2))", "cos_0*cos(2*atan(exp(x[1]/d)))"), degree = 4, d=1, cos_0 = cos_0, sin_0 = sin_0, a = 0.7)
+    ub = Expression(("sin_0 - a*exp(-x[1]*x[1])", "sqrt(1-pow(sin_0 - a*exp(-x[1]*x[1]), 2) - pow(cos_0*cos(2*atan(exp(x[1]/d))), 2))", "cos_0*cos(2*atan(exp(x[1]/d)))"), degree = 4, d=1, cos_0 = cos_0, sin_0 = sin_0, a = 0.7)
     
 if wall_type =='bloch':
     #ub = Expression((v_1_x, v_1_y, v_1_z), degree = 4, ph_0 = ph_0, th_0 = th_0)
