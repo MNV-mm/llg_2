@@ -227,7 +227,7 @@ yy0 = -1
 
 # Create mesh and define function space
 Lx = 140 # 60 150 80
-Ly = 30 # 30 80 40
+Ly = 60 # 30 80 40
 
 """
 parameters for subdomains with high anisotropy
@@ -235,7 +235,7 @@ these subdomains have the form of a square
 """
 # coordinates for middle point of first square
 x_a = -35
-y_a = 4
+y_a = 8
 # width and height
 delta_x = 3
 delta_y = 3
@@ -251,15 +251,15 @@ Define some classes for subdomains
 tol = 1E-14
 class Omega_0(SubDomain):
     def inside(self, x, on_boundary):
-        return (np.abs(x[0]) <= delta_x/2 + tol) and (np.abs(x[1]) <= delta_y/2 + tol)
+        return (np.abs(x[0]) <= 3*delta_x/2 + tol) and (np.abs(x[1]) <= delta_y/2 + tol)
 
 class Omega_1(SubDomain):
     def inside(self, x, on_boundary):
-        return (np.abs(x[0] - x_a) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
+        return (np.abs(x[0] - x_a) <= 3*delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
 
 class Omega_2(SubDomain):
     def inside(self, x, on_boundary):
-        return (np.abs(x[0] + x_a) <= delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
+        return (np.abs(x[0] + x_a) <= 3*delta_x/2 + tol) and (np.abs(x[1] - y_a) <= delta_y/2 + tol)
 
 # class Omega_3(SubDomain):
 #     def inside(self, x, on_boundary):
@@ -503,11 +503,11 @@ int_y = sp.ccode(intg_1[1]*4*sp.pi)
 # In[3]:
 wall_type = 'neel'# 'bloch'  'neel' 'h'
 # Define boundary condition
+sin_0 = -4*np.pi*4*4/2/1000/(1+2*np.pi*4**2/1000)
+cos_0 = np.sqrt(1-sin_0**2)
 if wall_type =='neel':
-    ub = Expression(("0", "-sin(2*atan(exp(x[1]/d)))", "cos(2*atan(exp(x[1]/d)))"), degree = 4, d=1)
-    #ub = Expression(("0", "-sin(2*atan(exp(x[1]/d)))*cos(a) + cos(2*atan(exp(x[1]/d)))*sin(a)", "sin(a)*sin(2*atan(exp(x[1]/d))) + cos(2*atan(exp(x[1]/d)))*cos(a)"), degree = 4, d=1/beta, a = theta_0)
-    #ub_n = Expression(("0", "sin(2*atan(exp(x[1]/d))+a)", "cos(2*atan(exp(x[1]/d))+a)"), degree = 4, d=1/beta, a = theta_0)
-    #ub = Expression(("0", "sqrt(1-(tanh(x[1]/d)*tanh(x[1]/d)))", "tanh(x[1]/d)", "0"), degree = 4, d=1/beta)
+    #ub = Expression(("0", "-sin(2*atan(exp(x[1]/d)))", "cos(2*atan(exp(x[1]/d)))"), degree = 4, d=1)
+    ub = fen.Expression(("sin_0 - a*exp(-x[0]*x[0])", "sqrt(1-pow(sin_0 - a*exp(-x[0]*x[0]), 2) - pow(cos_0*cos(2*atan(exp(x[0]/d))), 2))", "cos_0*cos(2*atan(exp(x[0]/d)))"), degree = 4, d=1, cos_0 = cos_0, sin_0 = sin_0, a = 0.7)
     
 if wall_type =='bloch':
     #ub = Expression((v_1_x, v_1_y, v_1_z), degree = 4, ph_0 = ph_0, th_0 = th_0)
@@ -671,7 +671,7 @@ tol = 1E-7
 theta = 1
 E_old = 0
 th = Constant(theta)
-N_f = 1000 #1000
+N_f = 500 #1000
 n = FacetNormal(mesh)
 oo = Constant(0)
 PI = Constant(math.pi)
