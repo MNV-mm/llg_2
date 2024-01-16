@@ -1,4 +1,4 @@
-import bempp.api
+#import bempp.api
 import scipy
 import numpy as np
 import sympy as sp
